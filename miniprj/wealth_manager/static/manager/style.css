@@ -1,0 +1,339 @@
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit; 
+  text-decoration: none;
+  list-style: none;
+}
+
+html {
+  font-size: 62.5%; 
+}
+
+@media only screen and (min-width: 112.5em) {
+    html {
+      font-size: 75%; 
+    } 
+}
+  
+@media only screen and (max-width: 37.5em) {
+    html {
+      font-size: 50%; 
+    } 
+}
+
+
+body {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    line-height: 1.7;
+    box-sizing: border-box;
+    background: rgba(5, 14, 51, 0.1); 
+}
+
+.topnav {
+    height: 5.6rem;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(5, 14, 51, 1);
+    display: grid;
+    grid-template-columns: 20rem 1fr;
+    grid-template-areas: "logo user-nav"; 
+}
+
+.topnav form #search {
+    padding: 0.5rem 2rem;
+    padding-right: 2rem;
+    width: 25rem;
+    height: 100%;
+    font-size: 1.4rem;
+    background-color: rgba(5, 14, 51, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    color: #FFFAFF;
+    border-radius: 4px;
+    margin-right: -3rem;
+    outline: none;
+    transition: .2s ease-in-out; 
+}
+
+.topnav form #search:focus {
+    width: 30rem; 
+}
+
+.topnav form i, .topnav form ::placeholder {
+    color: #fffaff; 
+}
+
+@media only screen and (max-width: 52.25em) {
+    .topnav {
+      grid-template-columns: 6rem 1fr; 
+    } 
+}
+
+.topnav .logo {
+    grid-area: logo;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+@media only screen and (max-width: 75em) {
+      .topnav .logo {
+        padding: 0 2rem;
+        justify-content: space-between; 
+    } 
+}
+
+.topnav .logo a {
+    color: #FFFAFF;
+    margin-left: 1.2rem;
+}
+
+.topnav .user-menu {
+    grid-area: user-nav;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1.2rem;
+    font-size: 1.4rem; 
+}
+    
+.topnav .user-menu a {
+    color: #FFFAFF;
+}
+
+.topnav .user-menu a  i{
+    margin-left: 0.5rem;
+}
+      
+.topnav .user-menu a i:not(:last-child) {
+    margin-right: 1.2rem; 
+}
+      
+.topnav .user-menu a:not(:last-child) {
+    margin-right: 2rem; 
+}
+    
+@media only screen and (max-width: 52.25em) {
+    .topnav .user-menu {
+        justify-content: flex-end; 
+    } 
+}
+
+#search-results {
+  position: absolute;
+  top: 6rem;
+  left: 22rem;
+  font-size: 1.5rem;
+  width: 40rem;
+  background: #fff;
+  color: #53585d;
+  border-radius: 5px;
+  padding: 1rem 2rem;
+  box-shadow: 1rem 2rem 4rem rgba(83, 88, 93, 0.2), 1rem 2rem 4rem rgba(83, 88, 93, 0.2);
+  z-index: 5; 
+}
+
+#menu {
+  font-size: 1.6rem; 
+}
+
+.sidenav {
+  position: fixed;
+  top: 5.6rem;
+  left: 0;
+  width: 20rem;
+  height: calc(100vh - 5.6rem);
+  padding: 2rem 0;
+  overflow: auto;
+  z-index: 2; 
+  background: rgba(5, 14, 51, 1);
+}
+  
+@media only screen and (max-width: 75em) {
+    .sidenav {
+      background: rgba(5, 14, 51, 1);
+      box-shadow: 0.5rem 1rem 2rem rgba(83, 88, 93, 0.2);
+      border-bottom-right-radius: 5px; 
+    } 
+}
+  
+.sidenav .list {
+    display: flex;
+    flex-direction: column; 
+}
+    
+.sidenav .list a {
+    font-size: 1.6rem;
+    padding: .75rem 2rem;
+    color: #FFFAFF; 
+}
+      
+.sidenav .list a i {
+    margin-right: 1.2rem;
+    font-size: 1.2rem;
+    color: #6DB1FF;
+    color: inherit; 
+}
+      
+.sidenav .list a:not(:last-child) {
+    margin-bottom: 1rem; 
+}
+      
+.sidenav .list a:hover {
+    border-left: 4px solid rgba(5, 14, 51, 1);
+    background: #99d2ff;
+    color: rgba(5, 14, 51, 1);
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px; 
+}
+    
+.sidenav .list .active {
+      background: #99d2ff;
+      color: rgba(5, 14, 51, 1);
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px; 
+}
+
+.content {
+    margin-top: 5.6rem;
+    margin-left: 20rem;
+    padding: 2rem;
+    height: calc(100vh - 5.6rem);
+    overflow-y: auto; 
+}
+    
+@media only screen and (max-width: 75em) {
+    .content {
+        margin-left: 0; 
+    } 
+}
+    
+@media only screen and (max-width: 52.25em) {
+    .content {
+        margin-left: 0; 
+    } 
+}
+
+.display-sm {
+    display: none; 
+}
+
+@media only screen and (max-width: 52.25em) {
+    .display-sm {
+        display: inline-flex; 
+    } 
+}
+  
+.display-md {
+    display: none; 
+}
+
+@media only screen and (max-width: 75em) {
+    .display-md {
+        display: inline-flex; 
+    } 
+}
+  
+@media only screen and (max-width: 52.25em) {
+    .hidden-sm {
+        display: none; 
+    } 
+}
+  
+@media only screen and (max-width: 75em) {
+    .hidden-md {
+        display: none; 
+    } 
+}
+  
+.visible {
+    display: block !important; 
+}
+
+.grid {
+    display: grid;
+    grid-gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr)); 
+}
+    
+.grid:not(:last-child) {
+    margin-bottom: 2rem; 
+}
+    
+@media only screen and (max-width: 52.25em) {
+    .grid {
+        grid-template-columns: repeat(auto-fit, minmax(40rem, 1fr)); 
+    } 
+}
+   
+@media only screen and (max-width: 37.5em) {
+    .grid {
+        grid-template-columns: repeat(auto-fit, minmax(35rem, 1fr)); 
+    } 
+}
+      
+.mini-reports {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .75rem 1.5rem;
+    border-radius: 4px; 
+}
+
+.mini-reports .l {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+}
+
+.mini-reports .l .i {
+    display: flex;
+    flex-direction: row;
+}
+
+.mini-reports .l .i i{
+    color: #FFFAFF;
+    font-size: 1.6rem; 
+    justify-content: center;
+    margin-right: 0.5rem;
+    margin-top: 0.3rem;
+}
+
+.mini-reports .l span {
+    font-size: 1.6rem;
+    font-weight: 700; 
+}
+
+.mini-reports .l span:not(:last-child) {
+        font-size: 1.6rem;
+        letter-spacing: 2px; 
+}
+
+.mini-reports .r {
+    background: #FFFAFF;
+    height: 5rem;
+    width: 5rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 5rem 5rem 5rem rgba(74, 83, 90, 0.2); 
+}
+    
+.mini-reports .r i {
+    font-size: 1.6rem; 
+    color: rgba(5, 14, 51, 1);
+}
+
+.bg-blue {
+    background-color: rgba(5, 14, 51, 1);
+    color: #fffaff; 
+    padding: 1rem;
+}
+
+.c-blue {
+    color: #FFFAFF; 
+}
