@@ -1,18 +1,56 @@
-{% load static %}
-
+{% load static%}
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>Wealth Manager</title>
-        <link href="{% static 'manager/style.css' %}" rel="stylesheet">
-        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com"/>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
         <script src="https://kit.fontawesome.com/224b933d6f.js" crossorigin="anonymous"></script>
+        <link href="{% static 'manager/style.css' %}" rel="stylesheet"/>
+
+        {% block head %}
+
+        {% endblock head %}
+
     </head>
     <body>
-        {% block body %}
+        <nav class="topnav">
+            <div class="logo">
+                <img id="menu" src="{% static '/media/wealth_manager_logo.svg' %}" alt="logo" lazy loading="lazy" class="wmlogo" width="36px" height="36px">  
+                <a href="#" class="hidden-sm"><h1>Wealth Manager</h1></a>
+            </div>
+            <div class="user-menu">
+                <form action="#" method="post" class="hidden-sm">
+                    <input type="text" name="search" id="search" placeholder="Search...">
+                    <i class="fa fa-search"></i>
+                </form>
+                <div>
+                    <a href="{% url 'expense' %}"> Add Expense    <i class="fa fa-plus-square"></i> </a>
+                    <a href="{% url 'income' %}"> Add Income     <i class="fa fa-plus-square"></i> </a>
+                </div>
+            </div>
+        </nav>
+        
+        <aside class="sidenav hidden-sm hidden-md" id="nav">
+            <div class="list">
+                <a href="{% url 'index' %}" class="{% if nbar == 'home' %}active{% endif %}"><i class="fa fa-home"></i> Home</a>
+                <a href="{% url 'expense' %}" class="{% if nbar == 'expense' %}active{% endif %}"><i class="fas fa-money-check"></i> Expense</a>
+                <a href="{% url 'income' %}"class="{% if nbar == 'income' %}active{% endif %}"><i class="fas fa-coins"></i> Income</a>
+                <a href="{% url 'bankAccount' %}" class="{% if nbar == 'bankAccount' %}active{% endif %}"><i class="fas fa-university"></i> Bank Account</a>
+                <a href="{% url 'budget' %}" class="{% if nbar == 'budget' %}active{% endif %}"><i class="fas fa-hand-holding-usd"></i> Budget</a>
+                <a href="{% url 'savings' %}" class="{% if nbar == 'savings' %}active{% endif %}"><i class="fas fa-piggy-bank"></i> Savings</a>
+                <a href="{% url 'profile' %}" class="{% if nbar == 'profile' %}active{% endif %}"><i class="fa fa-users"></i> Profile</a>
+                <a href="{% url 'help' %}" class="{% if nbar == 'help' %}active{% endif %}"><i class="fas fa-question-circle"></i> Help</a>
+                <a href="{% url 'logout' %}" class="{% if nbar == 'logout' %}active{% endif %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </aside>
+        
+        <main class="content">
+            {% block body %}
 
-        {% endblock %}
+            {% endblock %}
+        </main>
+        <script src="{% static '/manager/main.js' %}"></script>
     </body>
 </html>

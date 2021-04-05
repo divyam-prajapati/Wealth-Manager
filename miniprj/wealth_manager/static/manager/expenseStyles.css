@@ -1,0 +1,157 @@
+.content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.grid {
+    flex-grow: 1;
+    display: grid;
+    grid-gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr)); 
+    margin-right: 1rem;
+}
+    
+.grid:not(:last-child) {
+    margin-bottom: 2rem; 
+}
+    
+@media only screen and (max-width: 52.25em) {
+    .grid {
+        grid-template-columns: repeat(auto-fit, minmax(40rem, 1fr)); 
+    } 
+}
+   
+@media only screen and (max-width: 37.5em) {
+    .grid {
+        grid-template-columns: repeat(auto-fit, minmax(35rem, 1fr)); 
+    } 
+}
+
+.add-expense {
+    flex-grow: 1;
+    background: #FFFAFF;
+    color: rgba(5, 14, 51, 1);
+    border-radius: 5px;
+    padding: .5rem 1rem ; 
+    margin-left: 1rem;
+    margin-right: 1.5rem;
+}
+
+.add-expense-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(5, 14, 51, 0.1);
+    padding: .5rem 0; 
+}
+
+.add-expense-header .add-expense-title {
+    font-size: 1.4rem;
+    color: rgba(5, 14, 51, 1); 
+}
+
+.add-expense-body {
+    margin: 1.5rem 0;
+    font-size: 1.4rem;
+    overflow: auto; 
+}
+
+.form label {
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: rgba(5, 14, 51, 1); 
+}
+  
+.form input, .form select {
+    width: 100%;
+    padding: 1.2rem 2rem;
+    margin: .8rem 0;
+    border: 1px solid rgba(5, 14, 51, 1);
+    border-radius: 5px;
+    font-size: 1.4rem; 
+}
+
+.form option {
+    margin: 1rem 0; 
+}
+
+.form input[type=submit] {
+    cursor: pointer; 
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse; 
+    font-size: 1.6rem; 
+}
+  
+th,td {
+    padding: .6rem;
+    text-align: left;
+    border-bottom: 1px solid #dae0e5;
+    color: #53585d; 
+}
+
+tr:hover {
+    background-color: #f5f6f8; }
+
+.zebra tr:nth-child(even) {
+    background-color: #f5f6f8; 
+}
+
+.zebra tr td a {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+.alert {
+    font-size: 1.4rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    padding: 1rem 2rem;
+    font-weight: 500; 
+}
+.alert-danger {
+    background: rgba(241, 97, 101, 0.2);
+    color: #F16165; 
+}
+.alert-warning {
+    background: rgba(255, 140, 42, 0.2);
+    color: #FF8C2A; 
+}
+.alert-info {
+    background: rgba(109, 177, 255, 0.2);
+    color: #6DB1FF; 
+}
+.alert-success {
+    background: rgba(0, 200, 111, 0.2);
+    color: #00C86F; 
+}
+
+.btn-dblue {
+    background-color: rgba(5, 14, 51, 0.7);
+    color: #fffaff; 
+}
+
+.btn-dblue:hover {
+      background-color: rgba(5, 14, 51, 1); 
+}
+  
+.btn-red {
+    background-color: #F16165;
+    color: #fffaff; 
+}
+    
+.btn-red:hover {
+    background-color: #ed3237; 
+}
+
+
+.btn-blue {
+    background-color: #6DB1FF;
+    color: #fffaff; 
+}
+.btn-blue:hover {
+    background-color: #3a96ff; 
+}

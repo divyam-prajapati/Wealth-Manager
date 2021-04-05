@@ -1,79 +1,48 @@
 {% extends "manager/layout.html" %}
-{% load static %}
+
+{% load static %}      
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'manager/dashboardStyles.css' %}" />
+{% endblock head %}
+
 {% block body %}
-
-<nav class="topnav">
-    <div class="logo">
-        <img id="menu" src="{% static '/media/wealth_manager_logo.svg' %}" alt="logo" lazy loading="lazy" class="wmlogo" width="36px" height="36px">  
-        <a href="#" class="hidden-sm"><h1>Wealth Manager</h1></a>
+<div class="grid">
+    <div class="mini-reports bg-blue">
+            <div class="l">
+                <div class="i">
+                    <i class="fas fa-rupee-sign c-blue"></i> 
+                    <span>50,000</span>
+                </div>
+                <span>Total Income</span>
+            </div>
+            <div class="r">
+                <i class="fas fa-coins c-blue"></i>
+            </div>
     </div>
-    <div class="user-menu">
-        <form action="#" method="post" class="hidden-sm">
-            <input type="text" name="search" id="search" placeholder="Search...">
-            <i class="fa fa-search"></i>
-        </form>
-        <div>
-            <a href="#"> Add Expense    <i class="fa fa-plus-square"></i> </a>
-            <a href="#"> Add Income     <i class="fa fa-plus-square"></i> </a>
-        </div>
+    <div class="mini-reports bg-blue">
+            <div class="l">
+                <div class="i">
+                    <i class="fas fa-rupee-sign c-blue"></i> 
+                    <span>10,000</span>
+                </div>
+                <span>Total Expense</span>
+            </div>
+            <div class="r">
+                <i class="fas fa-money-check c-blue"></i>
+            </div>
     </div>
-</nav>
-
-<aside class="sidenav hidden-sm hidden-md" id="nav">
-    <div class="list">
-        <a href="#" class="active"><i class="fa fa-home"></i> Home</a>
-        <a href="#"><i class="fas fa-money-check"></i> Expense</a>
-        <a href="#"><i class="fas fa-coins"></i> Income</a>
-        <a href="#"><i class="fas fa-university"></i> Bank Account</a>
-        <a href="#"><i class="fas fa-hand-holding-usd"></i> Budget</a>
-        <a href="#"><i class="fas fa-piggy-bank"></i> Savings</a>
-        <a href="#"><i class="fa fa-users"></i> Profile</a>
-        <a href="#"><i class="fas fa-question-circle"></i> Help</a>
-        <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    <div class="mini-reports bg-blue">
+            <div class="l">
+                <div class="i">
+                    <i class="fas fa-rupee-sign c-blue"></i> 
+                    <span>75,000</span>
+                </div>
+                <span>Total Savings</span>
+            </div>
+            <div class="r">
+                <i class="fas fa-piggy-bank c-blue"></i>
+            </div>
     </div>
-</aside>
-
-<main class="content">
-
-    <div class="grid">
-        <div class="mini-reports bg-blue">
-              <div class="l">
-                    <div class="i">
-                        <i class="fas fa-rupee-sign c-blue"></i> 
-                        <span>50,000</span>
-                    </div>
-                    <span>Total Income</span>
-              </div>
-              <div class="r">
-                  <i class="fas fa-coins c-blue"></i>
-              </div>
-        </div>
-        <div class="mini-reports bg-blue">
-              <div class="l">
-                    <div class="i">
-                        <i class="fas fa-rupee-sign c-blue"></i> 
-                        <span>10,000</span>
-                    </div>
-                    <span>Total Expense</span>
-              </div>
-              <div class="r">
-                  <i class="fas fa-money-check c-blue"></i>
-              </div>
-        </div>
-        <div class="mini-reports bg-blue">
-              <div class="l">
-                    <div class="i">
-                        <i class="fas fa-rupee-sign c-blue"></i> 
-                        <span>75,000</span>
-                    </div>
-                    <span>Total Savings</span>
-              </div>
-              <div class="r">
-                  <i class="fas fa-piggy-bank c-blue"></i>
-              </div>
-        </div>
-    </div>
-
-</main>
-<script src="{% static '/manager/main.js' %}"></script>
+</div>
 {% endblock body %}
