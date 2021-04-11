@@ -10,5 +10,7 @@ urlpatterns = [
     path("Savings/", views.savings, name="savings"),
     path("Profile/", views.profile, name="profile"),
     path("Help/", views.help, name="help"),
-    path("Logout/", views.logout, name="logout"),
+    path("Login/", views.login_view, name="login"),
+    path("Logout/", views.logout_view, name="logout"),
+    path("Signup/", views.signup, name="signup"),
 ]
