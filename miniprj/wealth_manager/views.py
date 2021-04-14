@@ -1,8 +1,16 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
+from .models import Expense
+from .models import Income
+
+from wealth_manager.models import *
 
 # Create your views here.
 def index(request):
@@ -50,10 +58,38 @@ def signup(request):
     return render(request, "manager/signup.html") 
 
 def expense(request): 
-    return render(request, "manager/expense.html", {'nbar': 'expense'})
+    if request.method == "POST":
+        amount = request.POST["amount"]
+        date = request.POST["date"]
+        category = request.POST["category"]
+        description = request.POST["description"]
+        e = Expense(expenseAmount = amount, expenseDate = date, expenseCategory = category, expenseDescription = description )
+        if e is not None: 
+            e.save()
+            return render(request, "manager/expense.html", {
+                    "expense": Expense.objects.all(),
+                    'nbar': 'expense',
+                    "message": "Expense Added Successfully",
+                    "status": "1"
+            })
+        else: 
+            return render(request, "manager/expense.html", {
+                    "expense": Expense.objects.all(),
+                    'nbar': 'expense',
+                    "message": "Error Unsuccessfully!",
+                    "status": "0"
+            })
+
+    return render(request, "manager/expense.html", {
+        "expense": Expense.objects.all(),
+        'nbar': 'expense'
+    })
 
 def income(request): 
-    return render(request, "manager/income.html", {'nbar': 'income'})
+    return render(request, "manager/income.html", {
+        "income": Income.objects.all(),    
+        'nbar': 'income',
+    })
 
 def bankAccount(request): 
     return render(request, "manager/bankAccount.html", {'nbar': 'bankAccount'})
@@ -69,4 +105,28 @@ def profile(request):
 
 def help(request): 
     return render(request, "manager/help.html", {'nbar': 'help'})
+
+def delete_expense(request, object_id):
+    object = Expense.objects.get(id = object_id) 
+    object.delete()     
+    return render(request, "manager/expense.html", {
+        "message": "Expense Deleted Successfully",
+        'status': '0',
+        "expense": Expense.objects.all(),
+        'nbar': 'expense',
+    })
+
+class ChartData(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request, format=None):
+
+        data = {
+            "data": Expense.objects.values(),#PAss INTEGER values of data in array
+        }
+        
+        return Response(data)
+
+
 

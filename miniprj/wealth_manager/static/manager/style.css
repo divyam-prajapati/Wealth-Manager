@@ -31,113 +31,33 @@ body {
     background: rgba(5, 14, 51, 0.1); 
 }
 
-.topnav {
+.logo {
+    background:rgba(5, 14, 51, 1);
+    width: 20rem;
     height: 5.6rem;
-    width: 100vw;
     position: fixed;
-    top: 0;
     left: 0;
-    background: rgba(5, 14, 51, 1);
-    display: grid;
-    grid-template-columns: 20rem 1fr;
-    grid-template-areas: "logo user-nav"; 
-}
-
-.topnav form #search {
-    padding: 0.5rem 2rem;
-    padding-right: 2rem;
-    width: 25rem;
-    height: 100%;
-    font-size: 1.4rem;
-    background-color: rgba(5, 14, 51, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.8);
-    color: #FFFAFF;
-    border-radius: 4px;
-    margin-right: -3rem;
-    outline: none;
-    transition: .2s ease-in-out; 
-}
-
-.topnav form #search:focus {
-    width: 30rem; 
-}
-
-.topnav form i, .topnav form ::placeholder {
-    color: #fffaff; 
-}
-
-@media only screen and (max-width: 52.25em) {
-    .topnav {
-      grid-template-columns: 6rem 1fr; 
-    } 
-}
-
-.topnav .logo {
-    grid-area: logo;
+    top: 0;
     display: flex;
     justify-content: center;
     align-items: center; 
 }
 
 @media only screen and (max-width: 75em) {
-      .topnav .logo {
+      .logo {
         padding: 0 2rem;
         justify-content: space-between; 
     } 
 }
 
-.topnav .logo a {
+.logo a h1 {
     color: #FFFAFF;
     margin-left: 1.2rem;
-}
-
-.topnav .user-menu {
-    grid-area: user-nav;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 1.2rem;
-    font-size: 1.4rem; 
-}
-    
-.topnav .user-menu a {
-    color: #FFFAFF;
-}
-
-.topnav .user-menu a  i{
-    margin-left: 0.5rem;
-}
-      
-.topnav .user-menu a i:not(:last-child) {
-    margin-right: 1.2rem; 
-}
-      
-.topnav .user-menu a:not(:last-child) {
-    margin-right: 2rem; 
-}
-    
-@media only screen and (max-width: 52.25em) {
-    .topnav .user-menu {
-        justify-content: flex-end; 
-    } 
-}
-
-#search-results {
-  position: absolute;
-  top: 6rem;
-  left: 22rem;
-  font-size: 1.5rem;
-  width: 40rem;
-  background: #fff;
-  color: #53585d;
-  border-radius: 5px;
-  padding: 1rem 2rem;
-  box-shadow: 1rem 2rem 4rem rgba(83, 88, 93, 0.2), 1rem 2rem 4rem rgba(83, 88, 93, 0.2);
-  z-index: 5; 
+    font-size: 1.6rem;  
 }
 
 #menu {
-  font-size: 1.6rem; 
+  font-size: 1rem; 
 }
 
 .sidenav {
@@ -233,10 +153,10 @@ body {
 }
 
 .content {
-    margin-top: 5.6rem;
+    margin-top: 1rem;
     margin-left: 20rem;
     padding: 2rem;
-    height: calc(100vh - 5.6rem);
+    height: 100vh;
     overflow-y: auto; 
 }
     
@@ -250,4 +170,48 @@ body {
     .content {
         margin-left: 0; 
     } 
+}
+
+@keyframes myAnimation{
+    0%{
+      opacity: 1;
+      transform: rotateX(90deg);
+    }
+    50%{
+      opacity: 0.5;
+      transform: rotateX(0deg);
+    }
+    100%{
+      display: none;
+      opacity: 0;
+      transform: rotateX(90deg);
+    }
+}
+
+.alert {
+    width: 30rem;
+    text-align: center;
+    font-size: 1.4rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    padding: 1rem 2rem;
+    font-weight: 500; 
+    align-self: center;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    margin-left: -10rem;
+    animation-name: myAnimation;
+    animation-duration: 5000ms;
+    animation-fill-mode: forwards;
+}
+
+.alert-danger {
+    background: rgba(247, 50, 57, 0.2);
+    color: #F16165; 
+}
+
+.alert-success {
+    background: rgba(9, 226, 129, 0.2);
+    color: #00C86F; 
 }

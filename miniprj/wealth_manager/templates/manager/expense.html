@@ -4,132 +4,254 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'manager/expenseStyles.css' %}" />
-    
 {% endblock head %}
 
 {% block body %}
-<div class="grid">
-    <div class="add-expense">
-        <div class="add-expense-header">
-            <h4 class="add-expense-title">Expenses Table</h4>
-        </div>
-        <div class="add-expense-body">
-            <div class="alert alert-success">Expense Added Succesfully</div>
-            <div class="alert alert-danger">Error! Expense was not added</div>
-            <table class="zebra">
-                <tr>
-                    <th>Category</th>
-                    <th>Amount (in <i class="fas fa-rupee-sign c-blue"></i>)</th>
-                    <th>Date</th>
-                    <th>Actions</th>
-                </tr>
-                <tr>
-                    <td>Rent</td>
-                    <td>15,000</td>
-                    <td>20/02/2019</td>
-                    <td>
-                        <a href="#" class="btn btn-dblue"><i class="fa fa-edit"></i></a>
-                        <a href="#" class="btn btn-red"><i class="fa fa-trash"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Health</td>
-                    <td>900</td>
-                    <td>14/1/2020</td>
-                    <td>
-                        <a href="#" class="btn btn-dblue"><i class="fa fa-edit"></i></a>
-                        <a href="#" class="btn btn-red"><i class="fa fa-trash"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Shopping</td>
-                    <td>1250</td>
-                    <td>20/02/2019</td>
-                    <td>
-                        <a href="#" class="btn btn-dblue"><i class="fa fa-edit"></i></a>
-                        <a href="#" class="btn btn-red"><i class="fa fa-trash"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Emi</td>
-                    <td>5500</td>
-                    <td>20/02/2020</td>
-                    <td>
-                        <a href="#" class="btn btn-dblue"><i class="fa fa-edit"></i></a>
-                        <a href="#" class="btn btn-red"><i class="fa fa-trash"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Rent</td>
-                    <td>15,000</td>
-                    <td>20/02/2019</td>
-                    <td>
-                        <a href="#" class="btn btn-dblue"><i class="fa fa-edit"></i></a>
-                        <a href="#" class="btn btn-red"><i class="fa fa-trash"></i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Health</td>
-                    <td>900</td>
-                    <td>14/1/2020</td>
-                    <td>
-                        <a href="#" class="btn btn-dblue"><i class="fa fa-edit"></i></a>
-                        <a href="#" class="btn btn-red"><i class="fa fa-trash"></i></a>
-                    </td>
-                </tr>
-            </table>
-        </div>
+
+<div class="container">
+    <div class="wrapper">
+        <div class="box graph" style="padding: 1rem 0 0 1rem"></div>
+    	<div class="box graph"></div>
     </div>
-</div>
+	<div class="box table">
+        <table class="flatTable">
+            <tr class="titleTr">
+              <td class="titleTd">EXPENSES</td>
+              <td colspan="3"></td>
+              <td class="plusTd button"><i class="fas fa-plus"></i></td>
+            </tr>
+            <tr class="headingTr">
+              <td>CATEGORY</td>
+              <td>DATE</td>
+              <td>AMOUNT</td>
+              <td>DESCRIPTION</td>
+              <td></td>
+            </tr>
 
-<div class="add-expense">
-
-    <div class="add-expense-header">
-        <h4 class="add-expense-title">Add Expense</h4>
+            {% for e in expense %}
+            <tr>
+              <td>{{ e.expenseCategory }}</td>
+              <td>{{ e.expenseDate }}</td>
+              <td>{{ e.expenseAmount }}</td>
+              <td>{{ e.expenseDescription }}</td>
+              <td class="controlTd"><i class="fas fa-cog"></i>
+                <div class="settingsIcons">
+                    <span class="settingsIcon"><i class="fas fa-times"></i></span>
+                    <span class="settingsIcon"><i class="fa fa-edit"></i></span>
+                    <div class="settingsIcon">
+                        <a href="{% url 'delete-object' e.id %}">
+                            <i class="fa fa-trash" style="color: red;"></i>
+                        </a>
+                    </div>
+                </div> 
+              </td>
+            </tr>
+            {% endfor%}
+          
+        </table>
     </div>
+    <div id="sForm" class="sForm">
+        <span class="button close"><i class="fas fa-times"></i></span>
+        <h2 class="title">Add a New Expense</h2>  
 
-    <div class="add-expense-body">
-        <form action="#" class="form" method="post">
 
-            <div class="group">
-                <label for="#">Expense Amount</label>
-                <input type="number" name="amount" placeholder="Enter your Expense Amount">
-            </div>
-            <div class="group">
-                <label for="#">Select Date of Expense</label>
-                <input class="form-control" id="date" name="date" placeholder="DD/MM/YYY" type="text"/>
-            </div>
-            <div class="group">
-                <label for="#">Select Expense Category</label>
-                <select name="category">
-                    <option value="">Select</option>
-                    <option value="">Rent</option>
-                    <option value="">Transportation</option>
-                    <option value="">Groceries</option>
-                    <option value="">Home and utilities</option>
-                    <option value="">Bills & emis</option>
-                    <option value="">Insurance</option>
-                    <option value="">Education</option>
-                    <option value="">Health</option>
-                    <option value="">Personal care</option>
-                    <option value="">Shopping</option>
-                    <option value="">Travel</option>
-                    <option value="">Entertainment</option>
-                    <option value="">Food and Dining</option>
-                    <option value="">Memberships</option>
-                </select>
-            </div>
-            <div class="group">
-                <label for="#">Expense Description</label>
-                <input type="text" name="description" placeholder="Enter Description">
-            </div>
-            <div class="group">
-                <input type="submit" class="btn btn-blue" style="width: 40%;" value="Save">
-            </div>
-            
-        </form>
-    </div>
+        <div class="add-expense sFormPadding">        
+            <div class="add-expense-body">
+        
+                <form action="{% url 'expense' %}" class="form" method="post">
+                    {% csrf_token %}
+                    <div class="group">
+                        <label for="amount">Expense Amount</label>
+                        <input type="number" name="amount" placeholder="Enter your Expense Amount">
+                    </div>
+                    <div class="group">
+                        <label for="date">Select Date of Expense</label>
+                        <input class="form-control" id="date" name="date" placeholder="YYYY-MM-DD" type="text"/>
+                    </div>
+                    <div class="group">
+                        <label for="category">Select Expense Category</label>
+                        <select name="category">
+                            <option value="">Select</option>
+                            <option value="Rent">Rent</option>
+                            <option value="Transportation">Transportation</option>
+                            <option value="Groceries">Groceries</option>
+                            <option value="Home and utilities">Home and utilities</option>
+                            <option value="Bills & emis">Bills & emis</option>
+                            <option value="Insurance">Insurance</option>
+                            <option value="Education">Education</option>
+                            <option value="Health">Health</option>
+                            <option value="Personal care">Personal care</option>
+                            <option value="Shopping">Shopping</option>
+                            <option value="Travel">Travel</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Food and Dining">Food and Dining</option>
+                            <option value="Memberships">Memberships</option>
+                        </select>
+                    </div>
+                    <div class="group">
+                        <label for="description">Expense Description</label>
+                        <input type="text" name="description" placeholder="Enter Description">
+                    </div>
+                    <div class="group">
+                        <input type="submit" class="btn btn-blue" style="width: 40%; border: none;" value="Save">
+                    </div>
                     
+                </form>
+            </div>
+        </div>
+
+
+    </div>
 </div>
+
+{% if message %}
+    {% if status == "1" %}
+        <div class="alert alert-success">{{ message }}</div>
+
+    {% endif %}
+    {% if status == "0" %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endif %}
+{% endif %}
 
 {% endblock body %}
+<!--From 2 new var one for label and one for data and pass them in data -->
+<script>
+    {% block jquery %}
+
+        $(".button").click(function () {
+            $("#sForm").toggleClass("open");   
+        });
+
+        $(".controlTd").click(function () {
+            $(this).children(".settingsIcons").toggleClass("display"); 
+            $(this).children(".settingsIcon").toggleClass("openIcon"); 
+        });
+
+    
+        var labels = ["Rent", "Transportation", "Groceries", "Home and utilities","Bills & emis",
+                    "Insurance","Education","Health","Personal care","Shopping","Travel","Entertainment",
+                    "Food and Dining","Memberships"]
+        var endpoint = "{% url 'api-chart-expense-data' %}"
+        $.ajax({
+            method: "GET",
+            url: endpoint,
+            success: function(data) {
+                var ctx = document.getElementById('myChart').getContext('2d');
+                const config = {
+                    type: 'doughnut',
+                    data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'My First Dataset',
+                                data: [300, 50, 100],
+                                backgroundColor: [
+                                    'rgb(255, 99, 132)',
+                                    'rgb(54, 162, 235)',
+                                    'rgb(255, 205, 86)'
+                                ],
+                                hoverOffset: 4
+                            }]
+                        },
+                };
+                var myChart = new Chart(ctx, config)
+
+            },
+            error: function(error_data) {
+                console.log("error")
+                console.log(error_data)
+            } 
+        })
+
+    {% endblock jquery %}
+</script>
+<!--
+
+    <div class="container">
+    <div class="wrapper" url-endpoint='{% url "api-chart-expense-data" %}'>
+            
+        <canvas id="myChart" class="graph"></canvas
+        <canvas id="montly-expense" class="graph"></canvas>
+
+        
+
+        
+        <div class="add-expense">
+
+            <div class="add-expense-header">
+                <h4 class="add-expense-title">Add Expense</h4>
+            </div>
+        
+            <div class="add-expense-body">
+        
+                <form action="{% url 'expense' %}" class="form" method="post">
+                    {% csrf_token %}
+                    <div class="group">
+                        <label for="amount">Expense Amount</label>
+                        <input type="number" name="amount" placeholder="Enter your Expense Amount">
+                    </div>
+                    <div class="group">
+                        <label for="date">Select Date of Expense</label>
+                        <input class="form-control" id="date" name="date" placeholder="YYYY-MM-DD" type="text"/>
+                    </div>
+                    <div class="group">
+                        <label for="category">Select Expense Category</label>
+                        <select name="category">
+                            <option value="">Select</option>
+                            <option value="">Rent</option>
+                            <option value="">Transportation</option>
+                            <option value="">Groceries</option>
+                            <option value="">Home and utilities</option>
+                            <option value="">Bills & emis</option>
+                            <option value="">Insurance</option>
+                            <option value="">Education</option>
+                            <option value="">Health</option>
+                            <option value="">Personal care</option>
+                            <option value="">Shopping</option>
+                            <option value="">Travel</option>
+                            <option value="">Entertainment</option>
+                            <option value="">Food and Dining</option>
+                            <option value="">Memberships</option>
+                        </select>
+                    </div>
+                    <div class="group">
+                        <label for="description">Expense Description</label>
+                        <input type="text" name="description" placeholder="Enter Description">
+                    </div>
+                    <div class="group">
+                        <input type="submit" class="btn btn-blue" style="width: 40%;" value="Save">
+                    </div>
+                    
+                </form>
+            </div>
+                            
+        </div>
+        
+    </div>    
+
+    <div class="grid">
+        <div class="add-expense-table">
+            <div class="add-expense-header">
+                <h4 class="add-expense-title">Expenses Table</h4>
+            </div>
+            <div class="add-expense-body">
+                <table class="zebra">
+                    {% for e in expense %}
+                        <tr>
+                            <td>{{ e.expenseCategory }}</td>
+                            <td>{{ e.expenseAmount }}</td>
+                            <td>{{ e.expenseDate }}</td>
+                            <td>
+                                <a href="#" class="btn btn-dblue"><i class="fa fa-edit"></i></a>
+                                <a href="#" class="btn btn-red"><i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+  
+</div>
+
+-->

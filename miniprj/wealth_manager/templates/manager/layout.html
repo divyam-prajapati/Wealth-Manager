@@ -5,32 +5,21 @@
         <meta charset="UTF-8">
         <title>Wealth Manager</title>
         <link rel="preconnect" href="https://fonts.gstatic.com"/>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet"/>
         <script src="https://kit.fontawesome.com/224b933d6f.js" crossorigin="anonymous"></script>
         <link href="{% static 'manager/style.css' %}" rel="stylesheet"/>
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         {% block head %}
 
         {% endblock head %}
 
     </head>
     <body>
-        <nav class="topnav">
-            <div class="logo">
-                <img id="menu" src="{% static '/media/wealth_manager_logo.svg' %}" alt="logo" lazy loading="lazy" class="wmlogo" width="36px" height="36px">  
-                <a href="#" class="hidden-sm"><h1>Wealth Manager</h1></a>
-            </div>
-            <div class="user-menu">
-                <form action="#" method="post" class="hidden-sm">
-                    <input type="text" name="search" id="search" placeholder="Search...">
-                    <i class="fa fa-search"></i>
-                </form>
-                <div>
-                    <a href="{% url 'expense' %}"> Add Expense    <i class="fa fa-plus-square"></i> </a>
-                    <a href="{% url 'income' %}"> Add Income     <i class="fa fa-plus-square"></i> </a>
-                </div>
-            </div>
-        </nav>
+        <div class="logo">
+            <img id="menu" src="{% static '/media/wealth_manager_logo.svg' %}" alt="logo" lazy loading="lazy" class="wmlogo" width="36px" height="36px">  
+            <a href="#" class="hidden-sm"><h1>Wealth Manager</h1></a>
+        </div>
         
         <aside class="sidenav hidden-sm hidden-md" id="nav">
             <div class="list">
@@ -52,5 +41,11 @@
             {% endblock %}
         </main>
         <script src="{% static '/manager/main.js' %}"></script>
+        <script>
+            $(document).ready(function() {
+                
+                {% block jquery %}{% endblock %}
+            })
+        </script>
     </body>
 </html>

@@ -211,25 +211,4 @@ body {
       bottom: 100%;
     }
 }
-  
-.alert {
-    width: 20rem;
-    text-align: center;
-    font-size: 1.4rem;
-    border-radius: 5px;
-    margin-bottom: 1rem;
-    padding: 1rem 2rem;
-    font-weight: 500; 
-    align-self: center;
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    margin-left: -10rem;
-}
-  
-.alert-danger {
-    background: rgba(241, 97, 101, 0.2);
-    color: #F16165; 
-}
-  
-  
+ 
