@@ -3,10 +3,10 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-
+from django.db.models import Sum
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
+import datetime
 from .models import Expense
 from .models import Income
 
@@ -58,6 +58,7 @@ def signup(request):
     return render(request, "manager/signup.html") 
 
 def expense(request): 
+
     if request.method == "POST":
         amount = request.POST["amount"]
         date = request.POST["date"]
@@ -106,9 +107,35 @@ def profile(request):
 def help(request): 
     return render(request, "manager/help.html", {'nbar': 'help'})
 
+def edit_expense(request, object_id): 
+    object = Expense.objects.get(id = object_id)
+    if request.method == "POST":
+        object.expenseAmount = request.POST["amount"]
+        object.expenseDate = request.POST["date"]
+        object.expenseCategory = request.POST["category"]
+        object.expenseDescription = request.POST["description"]
+        if object is not None:
+            object.save()
+            return render(request, "manager/expense.html", {
+                    "expense": Expense.objects.all(),
+                    'nbar': 'expense',
+                    "message": "Expense Edited Successfully",
+                    "status": "1",
+            })
+    else:
+        return render(request, "manager/expense.html", {
+                    "expense": Expense.objects.all(),
+                    'nbar': 'expense',
+                    'form_data': object,
+                    #"date": datetime.datetime.strptime(str(object.expenseDate), '%b, %d %Y').strftime('%Y-%m-%d'),
+                    "date": str(object.expenseDate)
+            })
+
+
 def delete_expense(request, object_id):
     object = Expense.objects.get(id = object_id) 
     object.delete()     
+
     return render(request, "manager/expense.html", {
         "message": "Expense Deleted Successfully",
         'status': '0',
@@ -119,14 +146,18 @@ def delete_expense(request, object_id):
 class ChartData(APIView):
     authentication_classes = []
     permission_classes = []
-
     def get(self, request, format=None):
 
         data = {
-            "data": Expense.objects.values(),#PAss INTEGER values of data in array
+            #"data": Expense.objects.values(),#PAss INTEGER values of data in array
+            "cdata": Expense.objects.values('expenseCategory').annotate(Sum('expenseAmount')),
+            #"ldata": Expense.objects.values('expenseDate').annotate(Sum('expenseAmount')),
+            "ldata": Expense.objects.annotate(m=Month('expenseDate')).values('m').annotate(Sum('expenseAmount')).order_by(),
         }
         
         return Response(data)
+
+        
 
 
 

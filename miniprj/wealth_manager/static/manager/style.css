@@ -156,7 +156,6 @@ body {
     margin-top: 1rem;
     margin-left: 20rem;
     padding: 2rem;
-    height: 100vh;
     overflow-y: auto; 
 }
     
@@ -175,16 +174,19 @@ body {
 @keyframes myAnimation{
     0%{
       opacity: 1;
-      transform: rotateX(90deg);
+    }
+    25%{
+        opacity: 0.9;  
     }
     50%{
-      opacity: 0.5;
-      transform: rotateX(0deg);
+      opacity: 0.75;
+    }
+    75%{
+        opacity: 0.5;
     }
     100%{
       display: none;
       opacity: 0;
-      transform: rotateX(90deg);
     }
 }
 
@@ -198,20 +200,24 @@ body {
     font-weight: 500; 
     align-self: center;
     position: absolute;
-    top: 0;
+    bottom: 0;
     left: 50%;
     margin-left: -10rem;
     animation-name: myAnimation;
-    animation-duration: 5000ms;
+    animation-duration: 6000ms;
     animation-fill-mode: forwards;
 }
 
 .alert-danger {
-    background: rgba(247, 50, 57, 0.2);
+    background: rgba(241, 97, 101, 0.2);
     color: #F16165; 
+    border-color: #F16165;
+    border-width: 1rem;
 }
 
 .alert-success {
-    background: rgba(9, 226, 129, 0.2);
+    background: rgba(0, 200, 111, 0.2);
     color: #00C86F; 
+    border-color: #00C86F;
+    border-width: 1rem;
 }

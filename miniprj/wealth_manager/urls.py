@@ -16,4 +16,5 @@ urlpatterns = [
     path("Signup/", views.signup, name="signup"),
     path('api/chart/expense_data/', ChartData.as_view(), name="api-chart-expense-data"),
     path('Expense/<int:object_id>/', views.delete_expense, name="delete-object"),
+    path('Expense/edit/<int:object_id>/', views.edit_expense, name="edit-object"),
 ]

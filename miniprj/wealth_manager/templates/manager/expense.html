@@ -10,8 +10,12 @@
 
 <div class="container">
     <div class="wrapper">
-        <div class="box graph" style="padding: 1rem 0 0 1rem"></div>
-    	<div class="box graph"></div>
+        <div class="box graph">
+            <canvas id="myChart1" class="graph"></canvas>
+        </div>
+    	<div class="box graph">
+            <canvas id="myChartSecond" class="graph"></canvas>
+        </div>
     </div>
 	<div class="box table">
         <table class="flatTable">
@@ -37,12 +41,14 @@
               <td class="controlTd"><i class="fas fa-cog"></i>
                 <div class="settingsIcons">
                     <span class="settingsIcon"><i class="fas fa-times"></i></span>
-                    <span class="settingsIcon"><i class="fa fa-edit"></i></span>
-                    <div class="settingsIcon">
-                        <a href="{% url 'delete-object' e.id %}">
-                            <i class="fa fa-trash" style="color: red;"></i>
+                    <span class="button settingsIcon">
+                        <a href="{% url 'edit-object' e.id %}">
+                            <i class="fa fa-edit" style="color: white;"></i>
                         </a>
-                    </div>
+                    </span>
+                    <a href="{% url 'delete-object' e.id %}" class="settingsIcon">
+                        <i class="fa fa-trash" style="color: red;"></i>
+                    </a>
                 </div> 
               </td>
             </tr>
@@ -62,15 +68,20 @@
                     {% csrf_token %}
                     <div class="group">
                         <label for="amount">Expense Amount</label>
-                        <input type="number" name="amount" placeholder="Enter your Expense Amount">
+                        <input type="number" name="amount" placeholder="Enter your Expense Amount"
+                        value="{% if form_data %}{{ form_data.expenseAmount }}{% endif %}"/>
                     </div>
                     <div class="group">
                         <label for="date">Select Date of Expense</label>
-                        <input class="form-control" id="date" name="date" placeholder="YYYY-MM-DD" type="text"/>
+                        <input class="form-control" id="date" name="date" type="date"
+                        {% if date %}value="{{ date }}"{% endif %}/>
                     </div>
                     <div class="group">
                         <label for="category">Select Expense Category</label>
                         <select name="category">
+                            {% if form_data %}
+                            <option value="{{ form_data.expenseCategory }}">{{ form_data.expenseCategory }}</option>
+                            {% endif %}
                             <option value="">Select</option>
                             <option value="Rent">Rent</option>
                             <option value="Transportation">Transportation</option>
@@ -90,10 +101,11 @@
                     </div>
                     <div class="group">
                         <label for="description">Expense Description</label>
-                        <input type="text" name="description" placeholder="Enter Description">
+                        <input type="text" name="description" placeholder="Enter Description"
+                        value="{% if form_data %}{{ form_data.expenseDescription }}{% endif %}"/>
                     </div>
                     <div class="group">
-                        <input type="submit" class="btn btn-blue" style="width: 40%; border: none;" value="Save">
+                        <input type="submit" class="btn btn-blue" style="width: 40%; border: none;" value="Save"/>
                     </div>
                     
                 </form>
@@ -128,34 +140,76 @@
             $(this).children(".settingsIcon").toggleClass("openIcon"); 
         });
 
-    
-        var labels = ["Rent", "Transportation", "Groceries", "Home and utilities","Bills & emis",
-                    "Insurance","Education","Health","Personal care","Shopping","Travel","Entertainment",
-                    "Food and Dining","Memberships"]
+        var color = ['#00429d', '#325da9', '#4e78b5', '#6694c1', '#80b1cc', '#9dced6', '#c0eade', 
+                    '#ffdac4', '#ffb3a7', '#fb8a8c', '#eb6574', '#d5405e', '#b81b4a', '#93003a'];
+        
         var endpoint = "{% url 'api-chart-expense-data' %}"
         $.ajax({
             method: "GET",
             url: endpoint,
             success: function(data) {
-                var ctx = document.getElementById('myChart').getContext('2d');
+                var ctx = document.getElementById('myChart1').getContext('2d');
+                //console.log(data.cdata);
+                
+                var labels = data.cdata.map(function(e) {
+                    return e.expenseCategory;
+                });
+                
+                var data = data.cdata.map(function(e) {
+                    return e.expenseAmount__sum;
+                });
+
                 const config = {
                     type: 'doughnut',
                     data: {
-                            labels: labels,
-                            datasets: [{
-                                label: 'My First Dataset',
-                                data: [300, 50, 100],
-                                backgroundColor: [
-                                    'rgb(255, 99, 132)',
-                                    'rgb(54, 162, 235)',
-                                    'rgb(255, 205, 86)'
-                                ],
-                                hoverOffset: 4
-                            }]
-                        },
+                        labels: labels,
+                        datasets: [{
+                            label: 'My First Dataset',
+                            data: data,
+                            backgroundColor: color,
+                            hoverOffset: 4
+                        }]
+                    },
                 };
                 var myChart = new Chart(ctx, config)
+            },
+            error: function(error_data) {
+                console.log("error")
+                console.log(error_data)
+            } 
+        })
 
+        $.ajax({
+            method: "GET",
+            url: endpoint,
+            success: function(data) {
+                var lineGraph = document.getElementById('myChartSecond').getContext('2d');
+                
+                var llabels = data.ldata.map(function(e) {
+                    const month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+                    
+                    return month[ parseInt(e.m) - 1];
+                });
+                var ldata = data.ldata.map(function(e) {
+                    return e.expenseAmount__sum;
+                });
+                
+                const lineData = {
+                    labels: llabels,
+                    datasets: [{
+                        label: 'Expense',
+                        data: ldata,
+                        fill: false,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    }]
+                };
+                const lineConfig = {
+                    type: 'line',
+                    data: lineData,
+                };
+                
+                var lineChart = new Chart(lineGraph, lineConfig)
             },
             error: function(error_data) {
                 console.log("error")
@@ -166,6 +220,8 @@
     {% endblock jquery %}
 </script>
 <!--
+
+
 
     <div class="container">
     <div class="wrapper" url-endpoint='{% url "api-chart-expense-data" %}'>

@@ -1,6 +1,12 @@
 from django.db import models
-
+from django.db.models import Func,F
 # Create your models here.
+
+class Month (Func):
+    function = 'STRFTIME'
+    template = '%(function)s("%%m", %(expressions)s)'
+    output_field = models.IntegerField()
+
 class Expense(models.Model):
     expenseAmount = models.IntegerField()
     expenseDate = models.DateField()
