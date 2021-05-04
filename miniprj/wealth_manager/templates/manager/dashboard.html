@@ -7,42 +7,178 @@
 {% endblock head %}
 
 {% block body %}
-<div class="grid">
-    <div class="mini-reports bg-blue">
-            <div class="l">
-                <div class="i">
-                    <i class="fas fa-rupee-sign c-blue"></i> 
-                    <span>50,000</span>
+<div class="container">
+    <div class="grid">
+        <div class="mini-reports bg-blue">
+                <div class="l">
+                    <div class="i">
+                        <i class="fas fa-rupee-sign c-blue"></i> 
+                        {% for k in i %}
+                            <span>{{k.incomeAmount__sum}}</span>
+                        {% endfor %}
+                    </div>
+                    <span>Total Income</span>
                 </div>
-                <span>Total Income</span>
-            </div>
-            <div class="r">
-                <i class="fas fa-coins c-blue"></i>
-            </div>
+                <div class="r">
+                    <i class="fas fa-coins c-blue"></i>
+                </div>
+        </div>
+        <div class="mini-reports bg-blue">
+                <div class="l">
+                    <div class="i">
+                        <i class="fas fa-rupee-sign c-blue"></i> 
+                        {% for k in e %}
+                            <span>{{k.expenseAmount__sum}}</span>
+                        {% endfor %}
+                    </div>
+                    <span>Total Expense</span>
+                </div>
+                <div class="r">
+                    <i class="fas fa-money-check c-blue"></i>
+                </div>
+        </div>
+        <!--<div class="mini-reports bg-blue">
+                <div class="l">
+                    <div class="i">
+                        <i class="fas fa-rupee-sign c-blue"></i> 
+                        <span></span>
+                    </div>
+                    <span>Total Savings</span>
+                </div>
+                <div class="r">
+                    <i class="fas fa-piggy-bank c-blue"></i>
+                </div>
+        </div>-->
     </div>
-    <div class="mini-reports bg-blue">
-            <div class="l">
-                <div class="i">
-                    <i class="fas fa-rupee-sign c-blue"></i> 
-                    <span>10,000</span>
-                </div>
-                <span>Total Expense</span>
-            </div>
-            <div class="r">
-                <i class="fas fa-money-check c-blue"></i>
-            </div>
-    </div>
-    <div class="mini-reports bg-blue">
-            <div class="l">
-                <div class="i">
-                    <i class="fas fa-rupee-sign c-blue"></i> 
-                    <span>75,000</span>
-                </div>
-                <span>Total Savings</span>
-            </div>
-            <div class="r">
-                <i class="fas fa-piggy-bank c-blue"></i>
-            </div>
+
+    <div class="wrapper">
+        <div class="box">
+            <canvas id="myChartLine" class="graph"></canvas>
+        </div>
+        <div class="box">
+            <canvas id="myChartPie" class="graph"></canvas>
+        </div>
     </div>
 </div>
+{% if message %}
+    {% if status == "1" %}
+        <div class="alert alert-success">{{ message }}</div>
+
+    {% endif %}
+    {% if status == "0" %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endif %}
+{% endif %}
+
 {% endblock body %}
+<script>
+    {% block jquery %}
+
+    var color = ['#93003a', '#b81b4a', '#d5405e', '#eb6574', '#fb8a8c', '#ffb3a7', 
+                    '#ffdac4', '#c0eade', '#9dced6', '#80b1cc','#6694c1', '#4e78b5','#325da9' , '#00429d'];
+        
+    var endpoint = "{% url 'api-chart-data' %}"
+
+    $.ajax({
+            method: "GET",
+            url: endpoint,
+            success: function(data) {
+                var lineGraph = document.getElementById('myChartLine').getContext('2d');
+                const month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+                var ldata = [] , ledata = [];
+                for (let i=0; i<12;i++) {
+                    ldata[i] = 0;
+                    ledata[i] = 0;
+                }
+                data.incomeLineData.map(function(e) {
+                    for (let i=0; i<12;i++) {
+                        if (parseInt(e.m) - 1 === i){
+                            ldata[i] +=  e.incomeAmount__sum;
+                            break;
+                        }                        
+                    }
+                    
+                });
+                data.expenseLineData.map(function(e) {
+                    for (let i=0; i<12;i++) {
+                        if (parseInt(e.m) - 1 === i){
+                            ledata[i] +=  e.expenseAmount__sum;
+                            break;
+                        }                        
+                    }
+                });
+                const lineData = {
+                    labels: month,
+                    datasets: [{
+                        label: 'Income',
+                        data: ldata,
+                        fill: false,
+                        borderColor: '#9c3d54',//'rgb(75, 192, 192)'
+                        tension: 0.1
+                    },{
+                        label: 'Expense',
+                        data: ledata,
+                        fill: false,
+                        borderColor: 'rgb(75, 192, 192)',//'rgb(75, 192, 192)'
+                        tension: 0.1
+                    }]
+                };
+                const lineConfig = {
+                    type: 'line',
+                    data: lineData,
+                };
+                
+                var lineChart = new Chart( lineGraph, lineConfig)
+            },
+            error: function(error_data) {
+                console.log("error")
+                console.log(error_data)
+            } 
+    })
+
+    $.ajax({
+            method: "GET",
+            url: endpoint,
+            success: function(data) {
+                var ctx = document.getElementById('myChartPie').getContext('2d');
+                labels = [
+                    "Property",
+                    "Gold",
+                    "FD",
+                    "PPF"
+                ]
+                pdata = [];
+                data.p.map(function(e) {
+                    pdata.push(e.bamt__sum);
+                });
+                data.m.map(function(e) {
+                    pdata.push(e.bamt__sum);
+                });
+                data.f.map(function(e) {
+                    pdata.push(e.samt__sum);
+                });
+                data.pp.map(function(e) {
+                    pdata.push(e.samt__sum);
+                });
+                const config = {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'My First Dataset',
+                            data: pdata,
+                            backgroundColor: color,
+                            hoverOffset: 4
+                        }]
+                    },
+                };
+                var myChart = new Chart(ctx, config)
+            },
+            error: function(error_data) {
+                console.log("error")
+                console.log(error_data)
+            } 
+    })
+
+    {% endblock jquery %}
+</script>

@@ -26,11 +26,9 @@
                 <a href="{% url 'index' %}" class="{% if nbar == 'home' %}active{% endif %}"><i class="fa fa-home"></i> Home</a>
                 <a href="{% url 'expense' %}" class="{% if nbar == 'expense' %}active{% endif %}"><i class="fas fa-money-check"></i> Expense</a>
                 <a href="{% url 'income' %}"class="{% if nbar == 'income' %}active{% endif %}"><i class="fas fa-coins"></i> Income</a>
-                <a href="{% url 'bankAccount' %}" class="{% if nbar == 'bankAccount' %}active{% endif %}"><i class="fas fa-university"></i> Bank Account</a>
-                <a href="{% url 'budget' %}" class="{% if nbar == 'budget' %}active{% endif %}"><i class="fas fa-hand-holding-usd"></i> Budget</a>
-                <a href="{% url 'savings' %}" class="{% if nbar == 'savings' %}active{% endif %}"><i class="fas fa-piggy-bank"></i> Savings</a>
+                <a href="{% url 'assets' %}" class="{% if nbar == 'assets' %}active{% endif %}"><i class="fas fa-university"></i> Assets</a>
+                <a href="{% url 'events' %}" class="{% if nbar == 'events' %}active{% endif %}"><i class="fas fa-hand-holding-usd"></i> Events</a>
                 <a href="{% url 'profile' %}" class="{% if nbar == 'profile' %}active{% endif %}"><i class="fa fa-users"></i> Profile</a>
-                <a href="{% url 'help' %}" class="{% if nbar == 'help' %}active{% endif %}"><i class="fas fa-question-circle"></i> Help</a>
                 <a href="{% url 'logout' %}" class="{% if nbar == 'logout' %}active{% endif %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </aside>

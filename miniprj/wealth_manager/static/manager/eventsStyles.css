@@ -1,27 +1,3 @@
-.box {
-    box-sizing: border-box;
-    background-color: #FFFAFF;
-    margin: 0 1.5rem 1.5rem 0;
-    border-radius: 5px;
-}
-
-.container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    flex: 1;
-    flex-direction: column;
-}
-
-.graph {
-    width: 50%;
-}
-    
-.wrapper {
-    display: flex;
-    flex: 1;
-}
-
 .flatTable{  
     width:100%;
     min-width:500px;
@@ -53,6 +29,28 @@
     color: #FFFAFF;
 }
 
+#sFormExpense .close{
+    width: 32px;
+}
+
+.eventsExpense {
+    margin-top: 48px;
+}
+
+.flatTable .control-td-view,.control-td-add {
+    position: relative;
+    width: 80px;
+    cursor: pointer;
+    padding-left: 0px;
+}
+
+.flatTable .control-td-add {
+    position: relative;
+    width: 80px;
+    cursor: pointer;
+    padding-left: 0px;
+}
+
 .flatTable  .controlTd{  
   position:relative;
   width:80px;
@@ -80,6 +78,7 @@
     height:100%; 
     background: #FFFAFF;  
     overflow:hidden;  
+    transition:width 1s, right .3s;
     padding:0px;
     box-sizing:border-box;
     visibility: hidden;
@@ -108,6 +107,14 @@
 .open{  
     right:0;
     width:400px;
+    visibility: visible !important;
+}
+
+#eventsExpense {
+    visibility: hidden;
+}
+
+.open-table{ 
     visibility: visible !important;
 }
 
@@ -152,7 +159,7 @@ tr:nth-child(3) .settingsIcon {
     padding: 1rem 1rem 1rem 1rem;
 }
 
-.add-income-table {
+.add-event-table {
     background: #FFFAFF;
     color: rgba(5, 14, 51, 1);
     border-radius: 5px;
@@ -160,7 +167,7 @@ tr:nth-child(3) .settingsIcon {
 
 }
 
-.add-income-header {
+.add-event-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -168,12 +175,12 @@ tr:nth-child(3) .settingsIcon {
     padding: .5rem 0; 
 }
 
-.add-income-header .add-income-title {
+.add-event-header .add-event-title {
     font-size: 1.4rem;
     color: rgba(5, 14, 51, 1); 
 }
 
-.add-income-body {
+.add-event-body {
     margin: 1.5rem 0;
     font-size: 1.4rem;
     overflow: auto; 

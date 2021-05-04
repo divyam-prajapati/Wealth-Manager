@@ -1,0 +1,675 @@
+{% extends "manager/layout.html" %}
+{% load static %}      
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'manager/assetsStyles.css' %}" />
+    
+{% endblock head %}
+
+{% block body %}
+
+<div class="container">
+    <div class="grid">
+        <div class="mini-reports bg-blue">
+                <div class="l">
+                    <div class="i">
+                        <i class="fas fa-rupee-sign c-blue"></i> 
+                        {% for k in p %}
+                        <span>{{k.bamt__sum}}</span>
+                        {% endfor %}
+                    </div>
+                    <span>Property</span>
+                </div>
+                <div class="b">
+                    <div class="r button-v-property">
+                        <i class="fas fa-eye c-blue"></i>
+                    </div>
+                    <div class="r button-property">
+                        <i class="fas fa-plus c-blue"></i>
+                    </div>
+                </div>
+        </div>
+        <div class="mini-reports bg-blue">
+                <div class="l">
+                    <div class="i">
+                        <i class="fas fa-rupee-sign c-blue"></i> 
+                        {% for k in m %}
+                        <span>{{k.bamt__sum}}</span>
+                        {% endfor %}
+                    </div>
+                    <span>Gold</span>
+                </div>
+                <div class="b">
+                    <div class="r button-v-gold">
+                        <i class="fas fa-eye c-blue"></i>
+                    </div>
+                    <div class="r button-gold">
+                        <i class="fas fa-plus c-blue"></i>
+                    </div>
+                </div>
+        </div>
+        <div class="mini-reports bg-blue">
+                <div class="l">
+                    <div class="i">
+                        <i class="fas fa-rupee-sign c-blue"></i> 
+                        {% for k in f %}
+                        <span>{{k.samt__sum}}</span>
+                        {% endfor %}
+                    </div>
+                    <span>FD</span>
+                </div>
+                <div class="b">
+                    <div class="r button-v-fd">
+                        <i class="fas fa-eye c-blue"></i>
+                    </div>
+                    <div class="r button-fd">
+                        <i class="fas fa-plus c-blue"></i>
+                    </div>
+                </div>
+        </div>
+        <div class="mini-reports bg-blue">
+            <div class="l">
+                <div class="i">
+                    <i class="fas fa-rupee-sign c-blue"></i> 
+                    {% for k in pp %}
+                        <span>{{k.samt__sum}}</span>
+                    {% endfor %}
+                </div>
+                <span>PPF</span>
+            </div>
+            <div class="b">
+                <div class="r button-v-ppf">
+                    <i class="fas fa-eye c-blue"></i>
+                </div>
+                <div class="r button-ppf">
+                    <i class="fas fa-plus c-blue"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="graph-wrapper">
+        <div class="wrapper">
+            <div class="box graph">
+                <canvas id="pbar" class="graph"></canvas>
+            </div>
+            <div class="box graph">
+                <canvas id="mbar" class="graph"></canvas>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="box graph">
+                <canvas id="myChartFd" class="graph"></canvas>
+            </div>
+            <div class="box graph">
+                <canvas id="myChartPPF" class="graph"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div id="sForm-v-property" class="sForm">
+        <span class="button-v-property close"><i class="fas fa-times"></i></span>
+        <h2 class="title">Property</h2>  
+
+
+        <div class="assets sFormPadding">        
+            <div class="assets-body">
+
+                {% for p in property %}
+                    <div class="mini-reports bg-blue" style="margin-top: 1rem;">
+                        <div class="l">
+                            <div class="i">
+                                <i class="fas fa-rupee-sign c-blue"></i> 
+                                <span>{{ p.bamt }}</span>
+                            </div>
+                            <span>{{ p.des }}</span>
+                        </div>
+                        <div class="b">
+                            <a href="{% url 'assets-edit-p' p.id%}" class="button-property r">
+                                <i class="fas fa-pen c-blue"></i>
+                            </a>
+                            <a href="{% url 'assets-delete-p' p.id%}" class="r">
+                                <i class="fas fa-trash c-blue"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+                
+            </div>
+        </div>
+    </div>
+
+    <div id="sForm-v-gold" class="sForm">
+        <span class="button-v-gold close"><i class="fas fa-times"></i></span>
+        <h2 class="title">Gold</h2>  
+
+
+        <div class="assets sFormPadding">        
+            <div class="assets-body">
+                {% for g in gold %}
+                <div class="mini-reports bg-blue" style="margin-top: 1rem;">
+                    <div class="l">
+                        <div class="i">
+                            <i class="fas fa-rupee-sign c-blue"></i> 
+                            <span>{{ g.bamt }}</span>
+                        </div>
+                        <span>{{ g.des }}</span>
+                    </div>
+                    <div class="b">
+                        <a href="{% url 'assets-edit-m' g.id %}" class="button-gold r">
+                            <i class="fas fa-pen c-blue"></i>
+                        </a>
+                        <a href="{% url 'assets-delete-m' g.id%}" class="r">
+                            <i class="fas fa-trash c-blue"></i>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+                
+            </div>
+        </div>
+    </div>
+
+    <div id="sForm-v-fd" class="sForm">
+        <span class="button-v-fd close"><i class="fas fa-times"></i></span>
+        <h2 class="title">FD</h2>  
+
+
+        <div class="assets sFormPadding">        
+            <div class="assets-body">
+                {% for f in fd %}
+                    <div class="mini-reports bg-blue" style="margin-top: 1rem;">
+                        <div class="l">
+                            <div class="i">
+                                <i class="fas fa-rupee-sign c-blue"></i> 
+                                <span>{{ f.samt }}</span>
+                            </div>
+                            <span>{{f.des}}</span>
+                        </div>
+                        <div class="b">
+                            <a href="{% url 'assets-edit-f' f.id %}" class="button-fd r">
+                                <i class="fas fa-pen c-blue"></i>
+                            </a>
+                            <a href="{% url 'assets-delete-f' f.id%}" class="r">
+                                <i class="fas fa-trash c-blue"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+                
+            </div>
+        </div>
+    </div>
+
+    <div id="sForm-v-ppf" class="sForm">
+        <span class="button-v-ppf close"><i class="fas fa-times"></i></span>
+        <h2 class="title">PPF</h2>  
+
+
+        <div class="assets sFormPadding">        
+            <div class="assets-body">
+                {% for p in ppf %}
+                    <div class="mini-reports bg-blue" style="margin-top: 1rem;">
+                        <div class="l">
+                            <div class="i">
+                                <i class="fas fa-rupee-sign c-blue"></i> 
+                                <span>{{p.samt}}</span>
+                            </div>
+                            <span>{{p.des}}</span>
+                        </div>
+                        <div class="b">
+                            <a href="{% url 'assets-edit-pp' p.id %}" class="button-ppf r">
+                                <i class="fas fa-pen c-blue"></i>
+                            </a>
+                            <a href="{% url 'assets-delete-pp' p.id%}" class="r">
+                                <i class="fas fa-trash c-blue"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+	
+    <div id="sForm-property" class="sForm {% if form_data_p %}open{% endif %}">
+        <span class="button-property close"><i class="fas fa-times"></i></span>
+        <h2 class="title">Add a New Property</h2>  
+
+
+        <div class="assets sFormPadding">        
+            <div class="assets-body">
+        
+                <form action="{% if form_data_p %}{% url 'assets-edit-p' form_data_p.id%}{% else %}{% url 'assets-pr' %}{% endif %}" class="form" method="post">
+                    {% csrf_token %}
+                    <div class="group">
+                        <label for="sqft">How many square feet</label>
+                        <input type="text" name="sqft" placeholder="Enter your Square feet"
+                        value="{% if form_data_p %}{{ form_data_p.sqft }}{% endif %}"/>
+                    </div>
+                    <div class="group">
+                        <label for="date">Select Starting Date</label>
+                        <input class="form-control" id="pdate" name="date" type="date"
+                        {% if pdate %}value="{{ pdate }}"{% endif %}/>
+                    </div>
+                    <div class="group">
+                        <label for="bvalue">Buying Amount</label>
+                        <input type="number" name="bvalue" placeholder="Enter your Buying Amount"
+                        value="{% if form_data_p %}{{ form_data_p.bamt }}{% endif %}"/>
+                    </div>
+                    <div class="group">
+                        <label for="description">Property Description</label>
+                        <input type="text" name="description" placeholder="Enter Description"
+                        value="{% if form_data_p %}{{ form_data_p.des }}{% endif %}"/>
+                    </div>
+                    {% if form_data_p %}
+                        <div class="group">
+                            <label for="cpsqft">Current Price of per square feet</label>
+                            <input type="number" name="cpsqft" placeholder="Current Price of per square feet"
+                            value="{% if form_data_p %}{{ form_data_p.cpsqft }}{% endif %}"/>
+                        </div>
+                    {% endif %}
+                    <div class="group">
+                        <input type="submit" class="btn btn-blue" style="width: 40%; border: none;" value="Save"/>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="sForm-gold" class="sForm {% if form_data_m %}open{% endif %}">
+        <span class="button-gold close"><i class="fas fa-times"></i></span>
+        <h2 class="title">Add Gold</h2>  
+
+
+        <div class="assets sFormPadding">        
+            <div class="assets-body">
+        
+                <form action="{% if form_data_m %}{% url 'assets-edit-m' form_data_m.id %}{% else %}{% url 'assets-m' %}{% endif %}" class="form" method="post">
+                    {% csrf_token %}
+                    <div class="group">
+                        <label for="gms">How many grams</label>
+                        <input type="text" name="gms" placeholder="Enter grams"
+                        value="{% if form_data_m %}{{ form_data_m.gms }}{% endif %}"/>
+                    </div>
+                    <div class="group">
+                        <label for="type">Select Type</label>
+                        <select name="type">
+                            {% if form_data %}
+                            <option value="{{ form_data_m.type }}">{{ form_data_m.type }}</option>
+                            {% endif %}
+                            <option value="">Select</option>
+                            <option value="Gold">Gold</option>
+                            <option value="Silver">Silver</option>
+                            <option value="Platnium">Platinum</option>
+                        </select>
+                    </div>
+                    <div class="group">
+                        <label for="date">Select Buying Date</label>
+                        <input class="form-control" id="gdate" name="date" type="date"
+                        {% if gdate %}value="{{ gdate }}"{% endif %}/>
+                    </div>
+                    <div class="group">
+                        <label for="bvalue">Buying Amount</label>
+                        <input type="number" name="bvalue" placeholder="Enter your Buying Amount"
+                        value="{% if form_data_m %}{{ form_data_m.bamt }}{% endif %}"/>
+                    </div>
+                    <div class="group">
+                        <label for="gdescription">Description</label>
+                        <input type="text" name="gdescription" placeholder="Enter Description"
+                        value="{% if form_data_m %}{{ form_data_m.des }}{% endif %}"/>
+                    </div>
+                    {% if form_data_m %}
+                        <div class="group">
+                            <label for="cpm">Current Price</label>
+                            <input type="number" name="cpm" placeholder="Current Price"
+                            value="{% if form_data_m %}{{ form_data_m.cpm }}{% endif %}"/>
+                        </div>
+                    {% endif %}
+                    <div class="group">
+                        <input type="submit" class="btn btn-blue" style="width: 40%; border: none;" value="Save"/>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="sForm-fd" class="sForm {% if form_data_f %}open{% endif %}">
+        <span class="button-fd close"><i class="fas fa-times"></i></span>
+        <h2 class="title">Add a New FD</h2>  
+
+
+        <div class="assets sFormPadding">        
+            <div class="assets-body">
+        
+                <form action="{% if form_data_f %}{% url 'assets-edit-f' form_data_f.id %}{% else %}{% url 'assets-f' %}{% endif %}" class="form" method="post">
+                    {% csrf_token %}
+                    <div class="group">
+                        <label for="samt">FD Amount</label>
+                        <input type="number" name="samt" placeholder="Enter FD Amount"
+                        value="{% if form_data_f %}{{ form_data_f.samt }}{% endif %}"/>
+                    </div>
+                    <div class="group">
+                        <label for="date">Select Starting Date</label>
+                        <input class="form-control" id="date" name="date" type="date"
+                        {% if fdate %}value="{{ fdate }}"{% endif %}/>
+                    </div>
+                    <div class="group">
+                        <label for="int">Interest</label>
+                        <input type="text" name="int" placeholder="Enter Interest Percentage"
+                        value="{% if form_data_f %}{{ form_data_f.int }}{% endif %}"/>
+                    </div>
+                    <div class="group">
+                        <label for="description">FD Description</label>
+                        <input type="text" name="description" placeholder="Enter Description"
+                        value="{% if form_data_f %}{{ form_data_f.des }}{% endif %}"/>
+                    </div>
+                    <div class="group">
+                        <input type="submit" class="btn btn-blue" style="width: 40%; border: none;" value="Save"/>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="sForm-ppf" class="sForm {% if form_data_pp %}open{% endif %}">
+        <span class="button-ppf close"><i class="fas fa-times"></i></span>
+        <h2 class="title">Add a New PPF</h2>  
+
+
+        <div class="assets sFormPadding">        
+            <div class="assets-body">
+        
+                <form action="{% if form_data_pp %}{% url 'assets-edit-pp' form_data_pp.id %}{% else %}{% url 'assets-pp' %}{% endif %}" class="form" method="post">
+                    {% csrf_token %}
+                    <div class="group">
+                        <label for="samt">PPF Amount</label>
+                        <input type="number" name="samt" placeholder="Enter PPF Amount"
+                        value="{% if form_data_pp %}{{ form_data_pp.samt }}{% endif %}"/>
+                    </div>
+                    <div class="group">
+                        <label for="date">Select Starting Date</label>
+                        <input class="form-control" id="date" name="date" type="date"
+                        {% if ppdate %}value="{{ ppdate }}"{% endif %}/>
+                    </div>
+                    <div class="group">
+                        <label for="ppfinterest">Interest</label>
+                        <input type="text" name="int" placeholder="Enter Interest Percentage"
+                        value="{% if form_data_pp %}{{ form_data_pp.int }}{% endif %}"/>
+                    </div>
+                    <div class="group">
+                        <label for="description">PPF Description</label>
+                        <input type="text" name="description" placeholder="Enter Description"
+                        value="{% if form_data_pp %}{{ form_data_pp.des }}{% endif %}"/>
+                    </div>
+                    <div class="group">
+                        <input type="submit" class="btn btn-blue" style="width: 40%; border: none;" value="Save"/>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+    
+
+</div>
+
+{% if message %}
+    {% if status == "1" %}
+        <div class="alert alert-success">{{ message }}</div>
+
+    {% endif %}
+    {% if status == "0" %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endif %}
+{% endif %}
+
+{% endblock body %}
+
+<script>
+    {% block jquery %}
+        $(".button-property").click(function () {
+            $("#sForm-property").toggleClass("open"); 
+        });
+        $(".button-v-property").click(function () {
+            $("#sForm-v-property").toggleClass("open");   
+        });
+        $(".button-v-gold").click(function () {
+            $("#sForm-v-gold").toggleClass("open");   
+        });
+        $(".button-v-fd").click(function () {
+            $("#sForm-v-fd").toggleClass("open");   
+        });
+        $(".button-v-ppf").click(function () {
+            $("#sForm-v-ppf").toggleClass("open");   
+        });
+        $(".button-gold").click(function () {
+            $("#sForm-gold").toggleClass("open");   
+        });
+        $(".button-fd").click(function () {
+            $("#sForm-fd").toggleClass("open");   
+        });
+        $(".button-ppf").click(function () {
+            $("#sForm-ppf").toggleClass("open");   
+        });
+
+        $(".controlTd").click(function () {
+            $(this).children(".settingsIcons").toggleClass("display"); 
+            $(this).children(".settingsIcon").toggleClass("openIcon"); 
+        });
+
+        var color = [
+                        'rgba(255, 99, 132, 0.2)',
+                        ,
+                        'rgba(255, 205, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(201, 203, 207, 0.2)'
+                        ];
+
+        var borColor = [
+                        'rgb(255, 99, 132)',
+                        'rgb(255, 159, 64)',
+                        'rgb(255, 205, 86)',
+                        ,
+                        'rgb(54, 162, 235)',
+                        'rgb(153, 102, 255)',
+                        'rgb(201, 203, 207)'
+                        ];
+        
+        var endpoint = "{% url 'api-chart-data' %}"
+
+        
+        $.ajax({
+            method: "GET",
+            url: endpoint,
+            success: function(data) {
+                //property chart
+                var barGraph = document.getElementById('pbar').getContext('2d');
+
+                var blabels = data.property.map(function(e) {
+                    return e.des;
+                });
+                var bdata = data.property.map(function(e) {
+                    return e.bamt;
+                });
+                var b2data = data.property.map(function(e) {
+                    if (e.cpsqft != null) {
+                        return e.sqft * e.cpsqft;
+                    } else {
+                        return 0;
+                    }
+                });
+                const pdata = {
+                    labels: blabels,
+                    datasets: [{
+                        label: 'Property old Price',
+                        data: bdata,
+                        borderColor: 'rgb(255, 99, 132)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    },{
+                        label: 'Property new Price',
+                        data: b2data,
+                        borderColor: 'rgb(75, 192, 192)',
+                        backgroundColor: 'rgb(75, 192, 192, 0.2)',
+                    }]
+                };
+                const config = {
+                    type: 'bar',
+                    data: pdata,
+                    options: {
+                        barValueSpacing: 20,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    min: 0,
+                                }
+                            }]
+                        }
+                    },
+                };
+                var barChart = new Chart(barGraph, config)
+                //Property chart end
+                //Gold Chart
+                var mBarGraph = document.getElementById('mbar').getContext('2d');
+
+                var mlabels = data.gold.map(function(e) {
+                    return e.des;
+                });
+                var mdata = data.gold.map(function(e) {
+                    return e.bamt;
+                });
+                var m2data = data.gold.map(function(e) {
+                    if (e.cpm != null) {
+                        return e.cpm * e.gms;
+                    } else {
+                        return 0;
+                    }
+                });
+                const dataM = {
+                    labels: mlabels,
+                    datasets: [{
+                        label: 'Jewl old Price',
+                        data: mdata,
+                        borderColor: 'rgb(255, 99, 132)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    },{
+                        label: 'Jewl new Price',
+                        data: m2data,
+                        borderColor: 'rgb(75, 192, 192)',
+                        backgroundColor: 'rgb(75, 192, 192, 0.2)',
+                    }]
+                };
+                const configM = {
+                    type: 'bar',
+                    data: dataM,
+                    options: {
+                        barValueSpacing: 20,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    min: 0,
+                                }
+                            }]
+                        }
+                    },
+                };
+                var mBarChart = new Chart(mBarGraph, configM)
+                //Gold Chart end
+                //FD chart
+                var barGraphFD = document.getElementById('myChartFd').getContext('2d');
+                var fd2data = data.fdd.date.map(function(e) {
+                    return (data.fdd.today - parseInt(e.m));
+                });
+                var fdlabels = data.fd.map(function(e) {
+                    return e.des;
+                });
+                var fddata = data.fd.map(function(e) {
+                    for (let i =0;i<fd2data.length;i++) {
+                        fd2data[i] = e.samt + fd2data[i] + (e.samt * e.int)/100;
+                    }
+                    return e.samt;
+                });
+                const fdata = {
+                    labels: [fdlabels],
+                    datasets: [{
+                        label: 'Staring FD value',
+                        data: fddata,
+                        borderColor: 'rgb(255, 99, 132)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    },{
+                        label: 'Current FD value',
+                        data: fd2data,
+                        borderColor: 'rgb(75, 192, 192)',
+                        backgroundColor: 'rgb(75, 192, 192, 0.2)',
+                    }]
+                };
+                const configfd = {
+                    type: 'bar',
+                    data: fdata,
+                    options: {
+                        barValueSpacing: 20,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    min: 0,
+                                }
+                            }]
+                        }
+                    },
+                };
+                var barChartFD = new Chart(barGraphFD, configfd)
+                //Fd chart end
+                //PPF Chart
+                var barGraphPPF = document.getElementById('myChartPPF').getContext('2d');
+                var pp2data = data.fdd.date.map(function(e) {
+                    return (data.ppd.today - parseInt(e.m));
+                });
+                var pplabels = data.ppf.map(function(e) {
+                    return e.des;
+                });
+                var ppdata = data.ppf.map(function(e) {
+                    for (let i =0;i<fd2data.length;i++) {
+                        pp2data[i] = e.samt + pp2data[i] + (e.samt * e.int)/100;
+                    }
+                    return e.samt;
+                });
+                const ppfdata = {
+                    labels: [pplabels],
+                    datasets: [{
+                        label: 'Staring PPF value',
+                        data: ppdata,
+                        borderColor: 'rgb(255, 99, 132)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    },{
+                        label: 'Current PPF value',
+                        data: pp2data,
+                        borderColor: 'rgb(75, 192, 192)',
+                        backgroundColor: 'rgb(75, 192, 192, 0.2)',
+                    }]
+                };
+                const configppf = {
+                    type: 'bar',
+                    data: ppfdata,
+                    options: {
+                        barValueSpacing: 20,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    min: 0,
+                                }
+                            }]
+                        }
+                    },
+                };
+                var barChartPPF = new Chart(barGraphPPF, configppf)
+                //PPF Chart end
+            },
+            error: function(error_data) {
+                console.log("error")
+                console.log(error_data)
+            } 
+        })
+
+    {% endblock jquery %}
+</script>

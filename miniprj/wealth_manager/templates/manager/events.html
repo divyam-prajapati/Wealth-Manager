@@ -1,0 +1,212 @@
+{% extends "manager/layout.html" %}
+
+{% load static %}      
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'manager/eventsStyles.css' %}" />
+    
+{% endblock head %}
+
+{% block body %}
+<div class="container">
+	<div class="box table">
+        <table class="flatTable">
+            <tr class="titleTr">
+              <td class="titleTd">EVENTS</td>
+              <td colspan="5"></td>
+              <td class="plusTd button"><i class="fas fa-plus"></i></td>
+            </tr>
+            <tr class="headingTr">
+              <td>TITLE</td>
+              <td>DATE</td>
+              <td>AMOUNT</td>
+              <td>DESCRIPTION</td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+
+            {% for e in events %}
+            <tr>
+              <td>{{ e.etitle }}</td>
+              <td>{{ e.edate }}</td>
+              <td>{{ e.eamount }}</td>
+              <td>{{ e.edescription }}</td>
+              <td class="control-td-view">
+                <a href="{% url 'view-eventExpense-object' e.id %}" class="ExpensebuttonView settingsIcon" style="color: rgba(5,14,51,1); background-color: #f6f3f7;">
+                    <i class="fa fa-eye"></i>
+                </a>
+              </td>
+              <td class="control-td-add">
+                <a href="#" class="Expensebutton settingsIcon" style="color: rgba(5,14,51,1); background-color: #f6f3f7; padding-left: 0px;">
+                    <i class="fa fa-plus"></i>
+                </a>
+              </td>
+              <td class="controlTd"><i class="fas fa-cog"></i>
+                <div class="settingsIcons">
+                    <span class="settingsIcon"><i class="fas fa-times"></i></span>
+                    <a href="{% url 'edit-event-object' e.id %}" class="button settingsIcon">
+                        <i class="fa fa-edit" style="color: white;"></i>
+                    </a>
+                    <a href="{% url 'delete-event-object' e.id %}" class="settingsIcon">
+                        <i class="fa fa-trash" style="color: red;"></i>
+                    </a>
+                </div> 
+              </td>
+            {% endfor%}
+        </table>
+    </div>
+    <div id="eventsExpense" class="box table {% if events_expense_list %}open-table{% endif %} {% if form_data %}open-table{% endif %}">
+        <table class="flatTable eventsExpense">
+            <tr class="titleTr">
+              <td class="titleTd">EXPENSES IN EVENT</td>
+              <td colspan="3"></td>
+            </tr>
+            <tr class="headingTr">
+              <td>TITLE</td>
+              <td>DATE</td>
+              <td>AMOUNT</td>
+              <td></td>
+            </tr>
+            {% for e in events_expense_list %}
+            <tr>
+              <td>{{ e.etitle }}</td>
+              <td>{{ e.edate }}</td>
+              <td>{{ e.eamount }}</td>
+              <td class="controlTd"><i class="fas fa-cog"></i>
+                <div class="settingsIcons">
+                    <span class="settingsIcon"><i class="fas fa-times"></i></span>
+                    <a href="{% url 'edit-eventExpense-object' e.id %}" class="Expensebutton settingsIcon">
+                        <i class="fa fa-edit" style="color: white;"></i>
+                    </a>
+                    <a href="{% url 'delete-eventExpense-object' e.id %}" class="settingsIcon">
+                        <i class="fa fa-trash" style="color: red;"></i>
+                    </a>
+                </div> 
+              </td>
+            {% endfor%}
+        </table>
+    </div>
+
+    <div id="sForm" class="sForm {% if form_data %}open{% endif %}">
+        <span class="button close"><i class="fas fa-times"></i></span>
+        <h2 class="title">Add a New Event</h2>  
+
+
+        <div class="add-event sFormPadding">        
+            <div class="add-event-body">
+        
+                <form action="{% if form_data %}{% url 'edit-event-object' form_data.id %}{% else %}{% url 'events' %}{% endif %}" class="form" method="post">
+                    {% csrf_token %}
+                    <div class="group">
+                        <label for="title">Event Title</label>
+                        <input type="text" name="title" placeholder="Enter Title"
+                        value="{% if form_data %}{{ form_data.etitle }}{% endif %}"/>
+                    </div>
+                    <div class="group">
+                        <label for="amount">Event Amount</label>
+                        <input type="number" name="amount" placeholder="Enter your Events Total Amount"
+                        value="{% if form_data %}{{ form_data.eamount }}{% endif %}"/>
+                    </div>
+                    <div class="group">
+                        <label for="date">Select Date of Event</label>
+                        <input class="form-control" id="date" name="date" type="date" 
+                        {% if date %}value="{{ date }}"{% endif %}/>
+                    </div>
+                    <div class="group">
+                        <label for="description">Event Description</label>
+                        <input type="text" name="description" placeholder="Enter Description"
+                        value="{% if form_data %}{{ form_data.edescription }}{% endif %}"/>
+                    </div>
+                    <div class="group">
+                        <input type="submit" class="btn btn-blue" style="width: 40%; border: none;" value="Save"/>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="sFormExpense" class="sForm {% if form_data_e %}open{% endif %}">
+        <span class="Expensebutton close"><i class="fas fa-times"></i></span>
+        <h2 class="title">Add a New Expense for Event</h2>  
+
+
+        <div class="add-event sFormPadding">        
+            <div class="add-event-body">
+        
+                <form action="{% if form_data_e %}{% url 'edit-eventExpense-object' form_data_e.id %}{% else %}{% url 'events-expense' %}{% endif %}" class="form" method="post">
+                    {% csrf_token %}
+                    <div class="group">
+                        <label for="title">Expense Title</label>
+                        <input type="text" name="title" placeholder="Enter Expense Title"
+                        value="{% if form_data_e %}{{ form_data_e.etitle }}{% endif %}"/>
+                    </div>
+                    <div class="group">
+                        <label for="amount">Expense Amount</label>
+                        <input type="number" name="amount" placeholder="Enter your Expense Amount"
+                        value="{% if form_data_e %}{{ form_data_e.eamount }}{% endif %}"/>
+                    </div>
+                    <div class="group">
+                        <label for="event">Select Event </label>
+                        <select name="event">
+                            {% if form_data_e %}
+                                {% for e in events %}
+                                    {% if e.id == form_data_e.event %}
+                                        <option value="{{e.id}}" >{{ e.etitle }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            <option value="">Select</option>
+                            {% for e in events %}
+                                <option value="{{e.etitle}}" >{{ e.etitle }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="group">
+                        <label for="date">Select Date of Expense</label>
+                        <input class="form-control" id="date" name="date" type="date" 
+                        {% if edate %}value="{{ edate }}"{% endif %}/>
+                    </div>
+                    <div class="group">
+                        <input type="submit" class="btn btn-blue" style="width: 40%; border: none;" value="Save"/>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if message %}
+    {% if status == "1" %}
+        <div class="alert alert-success">{{ message }}</div>
+
+    {% endif %}
+    {% if status == "0" %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endif %}
+{% endif %}
+
+{% endblock body %}
+
+<script>
+    {% block jquery %}
+        $(".button").click(function () {
+            $("#sForm").toggleClass("open");   
+        });
+
+        $(".Expensebutton").click(function () {
+            $("#sFormExpense").toggleClass("open");   
+        });
+
+        $(".ExpensebuttonView").click(function () {
+            $("#eventsExpense").toggleClass("open-table");   
+        });
+
+        $(".controlTd").click(function () {
+            $(this).children(".settingsIcons").toggleClass("display"); 
+            $(this).children(".settingsIcon").toggleClass("openIcon"); 
+        });
+    {% endblock jquery %}
+</script>

@@ -7,8 +7,8 @@ from django.db.models import Sum
 from rest_framework.views import APIView
 from rest_framework.response import Response
 import datetime
-from .models import Expense
-from .models import Income
+from django.core import serializers
+from .models import Expense, Income, property, gold, fd, ppf, Events, EventsExpense
 
 from wealth_manager.models import *
 
@@ -16,7 +16,10 @@ from wealth_manager.models import *
 def index(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse("login"))
-    return render(request, "manager/dashboard.html")
+    return render(request, "manager/dashboard.html",{
+        "e": [Expense.objects.values().aggregate(Sum('expenseAmount'))],
+        "i": [Income.objects.values().aggregate(Sum('incomeAmount'))],
+    })
 
 def login_view(request):
     if request.method == "POST":
@@ -68,44 +71,579 @@ def expense(request):
         if e is not None: 
             e.save()
             return render(request, "manager/expense.html", {
-                    "expense": Expense.objects.all(),
+                    "expense": Expense.objects.all().order_by('-expenseDate'),
                     'nbar': 'expense',
                     "message": "Expense Added Successfully",
                     "status": "1"
             })
         else: 
             return render(request, "manager/expense.html", {
-                    "expense": Expense.objects.all(),
+                    "expense": Expense.objects.all().order_by('-expenseDate'),
                     'nbar': 'expense',
                     "message": "Error Unsuccessfully!",
                     "status": "0"
             })
 
     return render(request, "manager/expense.html", {
-        "expense": Expense.objects.all(),
+        "expense": Expense.objects.all().order_by('-expenseDate'),
         'nbar': 'expense'
     })
 
 def income(request): 
+    if request.method == "POST":
+        amount = request.POST["amount"]
+        date = request.POST["date"]
+        category = request.POST["category"]
+        description = request.POST["description"]
+        i = Income(incomeAmount = amount, incomeDate = date, incomeCategory = category, incomeDescription = description )
+        if i is not None: 
+            i.save()
+            return render(request, "manager/income.html", {
+                    "income": Income.objects.all().order_by('-incomeDate'),
+                    'nbar': 'income',
+                    "message": "Income Added Successfully",
+                    "status": "1"
+            })
+        else: 
+            return render(request, "manager/income.html", {
+                    "income": Income.objects.all().order_by('-incomeDate'),
+                    'nbar': 'income',
+                    "message": "Error Unsuccessfully!",
+                    "status": "0"
+            })
+
     return render(request, "manager/income.html", {
-        "income": Income.objects.all(),    
+        "income": Income.objects.all().order_by('-incomeDate'),    
         'nbar': 'income',
     })
 
-def bankAccount(request): 
-    return render(request, "manager/bankAccount.html", {'nbar': 'bankAccount'})
 
-def budget(request): 
-    return render(request, "manager/budget.html", {'nbar': 'budget'})
+def assets(request):
+    return render(request, "manager/assets.html", {
+        'nbar': 'assets',
+        "property": property.objects.all().order_by('-date'),
+        "gold": gold.objects.all().order_by('-date'),
+        "fd": fd.objects.all().order_by('-date'),
+        "ppf": ppf.objects.all().order_by('-date'),
+        "p": [property.objects.values().aggregate(Sum('bamt'))],
+        "m": [gold.objects.values().aggregate(Sum('bamt'))],
+        "f": [fd.objects.values().aggregate(Sum('samt'))],
+        "pp": [ppf.objects.values().aggregate(Sum('samt'))],
+    })
 
-def savings(request): 
-    return render(request, "manager/savings.html", {'nbar': 'savings'})
+def assetsPr(request): 
+    if request.method == "POST":
+        sqft = request.POST["sqft"]
+        date = request.POST["date"]
+        bvalue = request.POST["bvalue"]
+        description = request.POST["description"]
+        i = property(sqft = sqft,date = date,bamt = bvalue,des = description)
+        i.save()
+        return render(request, "manager/assets.html", {
+                "property": property.objects.all().order_by('-date'),
+                "gold": gold.objects.all().order_by('-date'),
+                "fd": fd.objects.all().order_by('-date'),
+                "ppf": ppf.objects.all().order_by('-date'),
+                "p": [property.objects.values().aggregate(Sum('bamt'))],
+                "m": [gold.objects.values().aggregate(Sum('bamt'))],
+                "f": [fd.objects.values().aggregate(Sum('samt'))],
+                "pp": [ppf.objects.values().aggregate(Sum('samt'))],
+                'nbar': 'assets',
+                "message": "Property Added Successfully",
+                "status": "1"
+        })
 
-def profile(request): 
-    return render(request, "manager/profile.html", {'nbar': 'profile'})
+    return render(request, "manager/assets.html", {
+        'nbar': 'assets',
+        "property": property.objects.all().order_by('-date'),
+        "gold": gold.objects.all().order_by('-date'),
+        "fd": fd.objects.all().order_by('-date'),
+        "ppf": ppf.objects.all().order_by('-date'),
+        "p": [property.objects.values().aggregate(Sum('bamt'))],
+        "m": [gold.objects.values().aggregate(Sum('bamt'))],
+        "f": [fd.objects.values().aggregate(Sum('samt'))],
+        "pp": [ppf.objects.values().aggregate(Sum('samt'))],
+    })
 
-def help(request): 
-    return render(request, "manager/help.html", {'nbar': 'help'})
+def assetsPrE(request, object_id): 
+    object = property.objects.get(id = object_id)
+    if request.method == "POST":
+        object.sqft = request.POST["sqft"]
+        object.date = request.POST["date"]
+        object.bvalue = request.POST["bvalue"]
+        object.description = request.POST["description"]
+        object.cpsqft = request.POST["cpsqft"]
+        object.save()
+        return render(request, "manager/assets.html", {
+                "property": property.objects.all().order_by('-date'),
+                "gold": gold.objects.all().order_by('-date'),
+                "fd": fd.objects.all().order_by('-date'),
+                "ppf": ppf.objects.all().order_by('-date'),
+                "p": [property.objects.values().aggregate(Sum('bamt'))],
+                "m": [gold.objects.values().aggregate(Sum('bamt'))],
+                "f": [fd.objects.values().aggregate(Sum('samt'))],
+                "pp": [ppf.objects.values().aggregate(Sum('samt'))],
+                'nbar': 'assets',
+                "message": "Property Edited Successfully",
+                "status": "1"
+        })
+    else:
+        return render(request, "manager/assets.html", {
+                "property": property.objects.all().order_by('-date'),
+                "gold": gold.objects.all().order_by('-date'),
+                "fd": fd.objects.all().order_by('-date'),
+                "ppf": ppf.objects.all().order_by('-date'),
+                "p": [property.objects.values().aggregate(Sum('bamt'))],
+                "m": [gold.objects.values().aggregate(Sum('bamt'))],
+                "f": [fd.objects.values().aggregate(Sum('samt'))],
+                "pp": [ppf.objects.values().aggregate(Sum('samt'))],
+                'nbar': 'assets',
+                'form_data_p': object,
+                "pdate": str(object.date)
+        })
+
+
+def assetsPrD(request, object_id):
+    object = property.objects.get(id = object_id) 
+    object.delete()     
+    return render(request, "manager/assets.html", {
+                "property": property.objects.all().order_by('-date'),
+                "gold": gold.objects.all().order_by('-date'),
+                "fd": fd.objects.all().order_by('-date'),
+                "ppf": ppf.objects.all().order_by('-date'),
+                "p": [property.objects.values().aggregate(Sum('bamt'))],
+                "m": [gold.objects.values().aggregate(Sum('bamt'))],
+                "f": [fd.objects.values().aggregate(Sum('samt'))],
+                "pp": [ppf.objects.values().aggregate(Sum('samt'))],
+                'nbar': 'assets',
+                "message": "Property Deleted Successfully",
+                "status": "0"
+        })
+        
+def assetsM(request): 
+    if request.method == "POST":
+        gms = request.POST["gms"]
+        date = request.POST["date"]
+        type = request.POST["type"]
+        bvalue = request.POST["bvalue"]
+        description = request.POST["gdescription"]
+        g = gold(gms = gms,date = date,type = type,bamt = bvalue,des = description)
+        g.save()
+        return render(request, "manager/assets.html", {
+                "property": property.objects.all().order_by('-date'),
+                "gold": gold.objects.all().order_by('-date'),
+                "fd": fd.objects.all().order_by('-date'),
+                "ppf": ppf.objects.all().order_by('-date'),
+                "p": [property.objects.values().aggregate(Sum('bamt'))],
+                "m": [gold.objects.values().aggregate(Sum('bamt'))],
+                "f": [fd.objects.values().aggregate(Sum('samt'))],
+                "pp": [ppf.objects.values().aggregate(Sum('samt'))],
+                'nbar': 'assets',
+                "message": "Gold Added Successfully",
+                "status": "1"
+        })
+
+    return render(request, "manager/assets.html", {
+        'nbar': 'assets',
+        "property": property.objects.all().order_by('-date'),
+        "gold": gold.objects.all().order_by('-date'),
+        "fd": fd.objects.all().order_by('-date'),
+        "ppf": ppf.objects.all().order_by('-date'),
+    })
+
+def assetsME(request, object_id): 
+    object = gold.objects.get(id = object_id)
+    if request.method == "POST":
+        object.gms = request.POST["gms"]
+        object.date = request.POST["date"]
+        object.bamt = request.POST["bvalue"]
+        object.type = request.POST["type"]
+        object.des = request.POST["gdescription"]
+        object.cpm = request.POST["cpm"]
+        object.save()
+        return render(request, "manager/assets.html", {
+                "property": property.objects.all().order_by('-date'),
+                "gold": gold.objects.all().order_by('-date'),
+                "fd": fd.objects.all().order_by('-date'),
+                "ppf": ppf.objects.all().order_by('-date'),
+                "p": [property.objects.values().aggregate(Sum('bamt'))],
+                "m": [gold.objects.values().aggregate(Sum('bamt'))],
+                "f": [fd.objects.values().aggregate(Sum('samt'))],
+                "pp": [ppf.objects.values().aggregate(Sum('samt'))],
+                'nbar': 'assets',
+                "message": "Edited Successfully",
+                "status": "1"
+        })
+    else:
+        return render(request, "manager/assets.html", {
+                "property": property.objects.all().order_by('-date'),
+                "gold": gold.objects.all().order_by('-date'),
+                "fd": fd.objects.all().order_by('-date'),
+                "ppf": ppf.objects.all().order_by('-date'),
+                "p": [property.objects.values().aggregate(Sum('bamt'))],
+                "m": [gold.objects.values().aggregate(Sum('bamt'))],
+                "f": [fd.objects.values().aggregate(Sum('samt'))],
+                "pp": [ppf.objects.values().aggregate(Sum('samt'))],
+                'nbar': 'assets',
+                'form_data_m': object,
+                "gdate": str(object.date)
+        })
+
+
+def assetsMD(request, object_id):
+    object = gold.objects.get(id = object_id) 
+    object.delete()     
+    return render(request, "manager/assets.html", {
+                "property": property.objects.all().order_by('-date'),
+                "gold": gold.objects.all().order_by('-date'),
+                "fd": fd.objects.all().order_by('-date'),
+                "ppf": ppf.objects.all().order_by('-date'),
+                "p": [property.objects.values().aggregate(Sum('bamt'))],
+                "m": [gold.objects.values().aggregate(Sum('bamt'))],
+                "f": [fd.objects.values().aggregate(Sum('samt'))],
+                "pp": [ppf.objects.values().aggregate(Sum('samt'))],
+                'nbar': 'assets',
+                "message": "Deleted Successfully",
+                "status": "0"
+        })
+
+def assetsFd(request): 
+    if request.method == "POST":
+        samt = request.POST["samt"]
+        date = request.POST["date"]
+        int = request.POST["int"]
+        description = request.POST["description"]
+        f = fd(samt = samt,date = date,int = int,des = description)
+        f.save()
+        return render(request, "manager/assets.html", {
+                "property": property.objects.all().order_by('-date'),
+                "gold": gold.objects.all().order_by('-date'),
+                "fd": fd.objects.all().order_by('-date'),
+                "ppf": ppf.objects.all().order_by('-date'),
+                "p": [property.objects.values().aggregate(Sum('bamt'))],
+        "m": [gold.objects.values().aggregate(Sum('bamt'))],
+        "f": [fd.objects.values().aggregate(Sum('samt'))],
+        "pp": [ppf.objects.values().aggregate(Sum('samt'))],
+                'nbar': 'assets',
+                "message": "FD Added Successfully",
+                "status": "1"
+        })
+
+    return render(request, "manager/assets.html", {
+        'nbar': 'assets',
+        "property": property.objects.all().order_by('-date'),
+        "gold": gold.objects.all().order_by('-date'),
+        "fd": fd.objects.all().order_by('-date'),
+        "ppf": ppf.objects.all().order_by('-date'),
+        "p": [property.objects.values().aggregate(Sum('bamt'))],
+        "m": [gold.objects.values().aggregate(Sum('bamt'))],
+        "f": [fd.objects.values().aggregate(Sum('samt'))],
+        "pp": [ppf.objects.values().aggregate(Sum('samt'))],
+    })
+
+def assetsFdE(request, object_id): 
+    object = fd.objects.get(id = object_id)
+    if request.method == "POST":
+        object.samt = request.POST["samt"]
+        object.date = request.POST["date"]
+        object.int = request.POST["int"]
+        object.des = request.POST["description"]
+        object.save()
+        return render(request, "manager/assets.html", {
+                "property": property.objects.all(),
+                "gold": gold.objects.all().order_by('-date'),
+                "fd": fd.objects.all().order_by('-date'),
+                "ppf": ppf.objects.all().order_by('-date'),
+                "p": [property.objects.values().aggregate(Sum('bamt'))],
+        "m": [gold.objects.values().aggregate(Sum('bamt'))],
+        "f": [fd.objects.values().aggregate(Sum('samt'))],
+        "pp": [ppf.objects.values().aggregate(Sum('samt'))],
+                'nbar': 'assets',
+                "message": "FD Edited Successfully",
+                "status": "1"
+        })
+    else:
+        return render(request, "manager/assets.html", {
+                "property": property.objects.all().order_by('-date'),
+                "gold": gold.objects.all().order_by('-date'),
+                "fd": fd.objects.all().order_by('-date'),
+                "ppf": ppf.objects.all().order_by('-date'),
+                "p": [property.objects.values().aggregate(Sum('bamt'))],
+        "m": [gold.objects.values().aggregate(Sum('bamt'))],
+        "f": [fd.objects.values().aggregate(Sum('samt'))],
+        "pp": [ppf.objects.values().aggregate(Sum('samt'))],
+                'nbar': 'assets',
+                'form_data_f': object,
+                "fdate": str(object.date)
+        })
+
+
+def assetsFdD(request, object_id):
+    object = fd.objects.get(id = object_id) 
+    object.delete()     
+    return render(request, "manager/assets.html", {
+                "property": property.objects.all().order_by('-date'),
+                "gold": gold.objects.all().order_by('-date'),
+                "fd": fd.objects.all().order_by('-date'),
+                "ppf": ppf.objects.all().order_by('-date'),
+                "p": [property.objects.values().aggregate(Sum('bamt'))],
+        "m": [gold.objects.values().aggregate(Sum('bamt'))],
+        "f": [fd.objects.values().aggregate(Sum('samt'))],
+        "pp": [ppf.objects.values().aggregate(Sum('samt'))],
+                'nbar': 'assets',
+                "message": "FD Deleted Successfully",
+                "status": "0"
+        })
+
+def assetsPpf(request): 
+    if request.method == "POST":
+        samt = request.POST["samt"]
+        date = request.POST["date"]
+        int = request.POST["int"]
+        description = request.POST["description"]
+        p = ppf(samt = samt,date = date,int = int,des = description)
+        p.save()
+        return render(request, "manager/assets.html", {
+                "property": property.objects.all().order_by('-date'),
+                "gold": gold.objects.all().order_by('-date'),
+                "fd": fd.objects.all().order_by('-date'),
+                "ppf": ppf.objects.all().order_by('-date'),
+                "p": [property.objects.values().aggregate(Sum('bamt'))],
+        "m": [gold.objects.values().aggregate(Sum('bamt'))],
+        "f": [fd.objects.values().aggregate(Sum('samt'))],
+        "pp": [ppf.objects.values().aggregate(Sum('samt'))],
+                'nbar': 'assets',
+                "message": "PPF Added Successfully",
+                "status": "1"
+        })
+
+    return render(request, "manager/assets.html", {
+        'nbar': 'assets',
+        "property": property.objects.all().order_by('-date'),
+        "gold": gold.objects.all().order_by('-date'),
+        "fd": fd.objects.all().order_by('-date'),
+        "ppf": ppf.objects.all().order_by('-date'),
+        "p": [property.objects.values().aggregate(Sum('bamt'))],
+        "m": [gold.objects.values().aggregate(Sum('bamt'))],
+        "f": [fd.objects.values().aggregate(Sum('samt'))],
+        "pp": [ppf.objects.values().aggregate(Sum('samt'))],
+    })
+
+def assetsPpE(request, object_id): 
+    object = ppf.objects.get(id = object_id)
+    if request.method == "POST":
+        object.samt = request.POST["samt"]
+        object.date = request.POST["date"]
+        object.int = request.POST["int"]
+        object.des = request.POST["description"]
+        object.save()
+        return render(request, "manager/assets.html", {
+                "property": property.objects.all().order_by('-date'),
+                "gold": gold.objects.all().order_by('-date'),
+                "fd": fd.objects.all().order_by('-date'),
+                "ppf": ppf.objects.all().order_by('-date'),
+                "p": [property.objects.values().aggregate(Sum('bamt'))],
+        "m": [gold.objects.values().aggregate(Sum('bamt'))],
+        "f": [fd.objects.values().aggregate(Sum('samt'))],
+        "pp": [ppf.objects.values().aggregate(Sum('samt'))],
+                'nbar': 'assets',
+                "message": "PPF Edited Successfully",
+                "status": "1"
+        })
+    else:
+        return render(request, "manager/assets.html", {
+                "property": property.objects.all().order_by('-date'),
+                "gold": gold.objects.all().order_by('-date'),
+                "fd": fd.objects.all().order_by('-date'),
+                "ppf": ppf.objects.all().order_by('-date'),
+                'nbar': 'assets',
+                'form_data_pp': object,
+                "ppdate": str(object.date),
+                "p": [property.objects.values().aggregate(Sum('bamt'))],
+        "m": [gold.objects.values().aggregate(Sum('bamt'))],
+        "f": [fd.objects.values().aggregate(Sum('samt'))],
+        "pp": [ppf.objects.values().aggregate(Sum('samt'))],
+        })
+
+
+def assetsPpD(request, object_id):
+    object = ppf.objects.get(id = object_id) 
+    object.delete()     
+    return render(request, "manager/assets.html", {
+                "property": property.objects.all().order_by('-date'),
+                "gold": gold.objects.all().order_by('-date'),
+                "fd": fd.objects.all().order_by('-date'),
+                "ppf": ppf.objects.all().order_by('-date'),
+                "p": [property.objects.values().aggregate(Sum('bamt'))],
+        "m": [gold.objects.values().aggregate(Sum('bamt'))],
+        "f": [fd.objects.values().aggregate(Sum('samt'))],
+        "pp": [ppf.objects.values().aggregate(Sum('samt'))],
+                'nbar': 'assets',
+                "message": "PPF Deleted Successfully",
+                "status": "0"
+        })
+
+def events(request): 
+    
+    if request.method == "POST":
+        etitle = request.POST["title"]
+        eamount = request.POST["amount"]
+        edate = request.POST["date"]
+        edescription = request.POST["description"]
+        e = Events(eamount = eamount ,edate = edate, etitle = etitle, edescription = edescription )
+        if e is not None: 
+            e.save()
+            return render(request, "manager/Events.html", {
+                    "events": Events.objects.all().order_by('-edate'),
+                    "eventExpense": EventsExpense.objects.all().order_by('-edate'),
+                    'nbar': 'Events',
+                    "message": "Events Added Successfully",
+                    "status": "1"
+            })
+        else: 
+            return render(request, "manager/Events.html", {
+                    "events": Events.objects.all().order_by('-edate'),
+                    "eventExpense": EventsExpense.objects.all().order_by('-edate'),
+                    'nbar': 'events',
+                    "message": "Error Unsuccessfully!",
+                    "status": "0"
+            })
+
+    return render(request, "manager/Events.html", {
+        "events": Events.objects.all().order_by('-edate'),
+        "eventExpense": EventsExpense.objects.all().order_by('-edate'),
+        'nbar': 'events'
+    })
+
+def edit_event(request, object_id): 
+    object = Events.objects.get(id = object_id)
+    if request.method == "POST":
+        object.eamount = request.POST["amount"]
+        object.edate = request.POST["date"]
+        object.titie = request.POST["title"]
+        object.edescription = request.POST["description"]
+        if object is not None:
+            object.save()
+            return render(request, "manager/Events.html", {
+                    "events": Events.objects.all().order_by('-edate'),
+                    "eventExpense": EventsExpense.objects.all().order_by('-edate'),
+                    'nbar': 'events',
+                    "message": "Event Edited Successfully",
+                    "status": "1",
+            })
+    else:
+        return render(request, "manager/Events.html", {
+                    "events": Events.objects.all().order_by('-edate'),
+                    "eventExpense": EventsExpense.objects.all().order_by('-edate'),
+                    'nbar': 'events',
+                    'form_data': object,
+                    "date": str(object.edate)
+            })
+
+
+def delete_event(request, object_id):
+    object = Events.objects.get(id = object_id) 
+    object.delete()     
+
+    return render(request, "manager/Events.html", {
+        "message": "Events Deleted Successfully",
+        'status': '0',
+        "events": Events.objects.all().order_by('-edate'),
+        "eventExpense": EventsExpense.objects.all().order_by('-edate'),
+        'nbar': 'events',
+    })
+
+def eventsExpense(request): 
+    if request.method == "POST":
+        etitle = request.POST["title"]
+        eamount = request.POST["amount"]
+        edate = request.POST["date"]
+        event = request.POST["event"]
+        e = EventsExpense(eamount = eamount ,edate = edate, etitle = etitle, event = event)
+        if e is not None: 
+            e.save()
+            return render(request, "manager/Events.html", {
+                    "events": Events.objects.all(),
+                    "eventExpense": EventsExpense.objects.all().order_by('-edate'),
+                    'nbar': 'Events',
+                    "message": "Event Expense Added Successfully",
+                    "status": "1"
+            })
+        else: 
+            return render(request, "manager/Events.html", {
+                    "events": Events.objects.all().order_by('-edate'),
+                    "eventExpense": EventsExpense.objects.all(),
+                    'nbar': 'events',
+                    "message": "Error Unsuccessfully!",
+                    "status": "0"
+            })
+
+    return render(request, "manager/Events.html", {
+        "events": Events.objects.all().order_by('-edate'),
+        "event_title": Events.event_title.all().order_by('-edate'),
+        'nbar': 'events',
+    })
+
+def view_eventsExpense(request, object_id): 
+    object = Events.objects.get(id = object_id)
+    title = object.etitle
+    events_expense_list = EventsExpense.objects.values().filter(event = title).order_by('-edate')
+
+    if events_expense_list is not None:    
+        return render(request, "manager/Events.html", {
+            "events": Events.objects.all().order_by('-edate'),
+            "events_expense_list": events_expense_list,
+            'nbar': 'events',
+        })
+
+    else:
+        return render(request, "manager/Events.html", {
+            "events": Events.objects.all().order_by('-edate'),
+            "events_expense_list": events_expense_list,
+            'nbar': 'events',
+       })
+
+def edit_eventsExpense(request, object_id): 
+    object = EventsExpense.objects.get(id = object_id)
+    title = object.etitle
+    events_expense_list = EventsExpense.objects.values().filter(event = title).order_by('-edate')
+
+    if request.method == "POST":
+        object.eamount = request.POST["amount"]
+        object.edate = request.POST["date"]
+        object.etitle = request.POST["title"]
+        object.event = request.POST["event"]
+        if object is not None:
+            object.save()
+            return render(request, "manager/Events.html", {
+                    "events": Events.objects.all(),
+                    "eventExpense": EventsExpense.objects.all(),
+                    "events_expense_list": events_expense_list,
+                    'nbar': 'events',
+                    "message": "Event Edited Successfully",
+                    "status": "1",
+            })
+    else:
+        return render(request, "manager/Events.html", {
+                    "events": Events.objects.all(),
+                    "eventExpense": EventsExpense.objects.all(),
+                    "events_expense_list": events_expense_list,
+                    'nbar': 'events',
+                    'form_data_e': object,
+                    "edate": str(object.edate)
+            })
+
+
+def delete_eventsExpense(request, object_id):
+    object = EventsExpense.objects.get(id = object_id) 
+    object.delete()     
+
+    return render(request, "manager/Events.html", {
+        "message": "Events Deleted Successfully",
+        'status': '0',
+        "events": Events.objects.all().order_by('-edate'),
+        'nbar': 'events',
+    })
 
 def edit_expense(request, object_id): 
     object = Expense.objects.get(id = object_id)
@@ -117,17 +655,16 @@ def edit_expense(request, object_id):
         if object is not None:
             object.save()
             return render(request, "manager/expense.html", {
-                    "expense": Expense.objects.all(),
+                    "expense": Expense.objects.all().order_by('-expenseDate'),
                     'nbar': 'expense',
                     "message": "Expense Edited Successfully",
                     "status": "1",
             })
     else:
         return render(request, "manager/expense.html", {
-                    "expense": Expense.objects.all(),
+                    "expense": Expense.objects.all().order_by('-expenseDate'),
                     'nbar': 'expense',
                     'form_data': object,
-                    #"date": datetime.datetime.strptime(str(object.expenseDate), '%b, %d %Y').strftime('%Y-%m-%d'),
                     "date": str(object.expenseDate)
             })
 
@@ -139,20 +676,79 @@ def delete_expense(request, object_id):
     return render(request, "manager/expense.html", {
         "message": "Expense Deleted Successfully",
         'status': '0',
-        "expense": Expense.objects.all(),
+        "expense": Expense.objects.all().order_by('-expenseDate'),
         'nbar': 'expense',
+    })
+
+def edit_income(request, object_id): 
+    object = Income.objects.get(id = object_id)
+    if request.method == "POST":
+        object.incomeAmount = request.POST["amount"]
+        object.incomeDate = request.POST["date"]
+        object.incomeCategory = request.POST["category"]
+        object.incomeDescription = request.POST["description"]
+        if object is not None:
+            object.save()
+            return render(request, "manager/income.html", {
+                    "income": Income.objects.all().order_by('-incomeDate'),
+                    'nbar': 'income',
+                    "message": "Income Edited Successfully",
+                    "status": "1",
+            })
+    else:
+        return render(request, "manager/income.html", {
+                    "income": Income.objects.all().order_by('-incomeDate'),
+                    'nbar': 'income',
+                    'form_data': object,
+                    "date": str(object.incomeDate)
+            })
+
+
+def delete_income(request, object_id):
+    object = Income.objects.get(id = object_id) 
+    object.delete()     
+
+    return render(request, "manager/income.html", {
+        "message": "Income Deleted Successfully",
+        'status': '0',
+        "income": Income.objects.all().order_by('-incomeDate'),
+        'nbar': 'income',
+    })
+
+def profile(request): 
+    return render(request, "manager/profile.html", {
+        'nbar': 'profile',
     })
 
 class ChartData(APIView):
     authentication_classes = []
     permission_classes = []
+    
     def get(self, request, format=None):
 
+        now = datetime.datetime.now()
         data = {
-            #"data": Expense.objects.values(),#PAss INTEGER values of data in array
-            "cdata": Expense.objects.values('expenseCategory').annotate(Sum('expenseAmount')),
-            #"ldata": Expense.objects.values('expenseDate').annotate(Sum('expenseAmount')),
-            "ldata": Expense.objects.annotate(m=Month('expenseDate')).values('m').annotate(Sum('expenseAmount')).order_by(),
+            "expensePieData": Expense.objects.values('expenseCategory').annotate(Sum('expenseAmount')),
+            "expenseLineData": Expense.objects.annotate(m=Month('expenseDate')).values('m').annotate(Sum('expenseAmount')).order_by(),
+            "incomePieData": Income.objects.values('incomeCategory').annotate(Sum('incomeAmount')),
+            "incomeLineData": Income.objects.annotate(m=Month('incomeDate')).values('m').annotate(Sum('incomeAmount')).order_by(),
+            "property": property.objects.values(),
+            "p": [property.objects.values().aggregate(Sum('bamt'))],
+            "m": [gold.objects.values().aggregate(Sum('bamt'))],
+            "f": [fd.objects.values().aggregate(Sum('samt'))],
+            "pp": [ppf.objects.values().aggregate(Sum('samt'))],
+            "gold": gold.objects.values(),
+            "fd": fd.objects.values(),
+            "fdd": {
+                'date': fd.objects.annotate(m=Month('date')).values('m'),
+                'today': now.strftime('%m'),
+            },
+            "ppf": ppf.objects.values(),
+            "ppd": {
+                'date': ppf.objects.annotate(m=Month('date')).values('m'),
+                'today': now.strftime('%m'),
+            },
+            # "ee": EventsExpense.objects.values().filter(etitle = "Test Event"),
         }
         
         return Response(data)

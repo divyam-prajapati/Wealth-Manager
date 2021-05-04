@@ -1,74 +1,124 @@
+.container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.container .grid {
+    display: grid;
+    grid-gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(0rem, 1fr));
+    margin-bottom: 16px;
+    margin-right: 1.4rem;
+}
+
+@media only screen and (max-width: 52.25em) {
+    .grid {
+        grid-template-columns: repeat(auto-fit, minmax(4rem, 1fr));
+    } 
+}
+   
+@media only screen and (max-width: 37.5em) {
+    .grid {
+        grid-template-columns: repeat(auto-fit, minmax(4rem, 1fr));
+    } 
+}
+      
+.mini-reports {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px; 
+    max-height: 74px;
+    align-items: center;
+}
+
+.mini-reports .l {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+}
+
+.mini-reports .l .i {
+    display: flex;
+    flex-direction: row;
+}
+
+.mini-reports .l .i {
+    display: flex;
+    flex-direction: row;
+}
+
+.mini-reports .l .i i{
+    color: #FFFAFF;
+    font-size: 1.6rem; 
+    justify-content: center;
+    margin-right: 0.5rem;
+    margin-top: 0.3rem;
+}
+
+.mini-reports .l span {
+    font-size: 1.6rem;
+    font-weight: 700; 
+}
+
+.mini-reports .l span:not(:last-child) {
+    font-size: 1.6rem;
+    letter-spacing: 2px; 
+}
+
+.mini-reports .r {
+    background: #FFFAFF;
+    height: 2.5rem;
+    width: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 5rem 5rem 5rem rgba(74, 83, 90, 0.2); 
+    cursor: pointer;
+}
+
+.mini-reports .b .r {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+    
+.mini-reports .r i {
+    font-size: 1rem; 
+    color: rgba(5, 14, 51, 1);
+}
+
+.bg-blue {
+    background-color: rgba(5, 14, 51, 1);
+    color: #fffaff; 
+    padding: 1rem;
+}
+
+.c-blue {
+    color: #FFFAFF; 
+}
 .box {
     box-sizing: border-box;
     background-color: #FFFAFF;
     margin: 0 1.5rem 1.5rem 0;
     border-radius: 5px;
 }
-
-.container {
+.graph {
+    width: 50%;
+}
+.container .graph-wrapper {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
     flex: 1;
     flex-direction: column;
 }
 
-.graph {
-    width: 50%;
-}
-    
-.wrapper {
+.container .graph-wrapper .wrapper {
     display: flex;
     flex: 1;
 }
 
-.flatTable{  
-    width:100%;
-    min-width:500px;
-    border-collapse:collapse;  
-    font-weight: 600;
-    font-size: 1.3rem;
-    color: rgba(5, 14, 51, 1);
-}
-
-.flatTable tr {
-    height: 50px;
-    background: #f6f3f7;
-    border-bottom: rgba(0,0,0,.05) 1px solid;
-}
-
-.flatTable td {    
-    box-sizing: border-box;
-    padding-left: 30px;
-}
-
-.flatTable .titleTr{
-  height:48px;  
-  color:#FFFAFF; 
-  background: rgba(5, 14, 51, 1);  
-  border:0px solid;
-}
-
-.flatTable  .plusTd{
-    color: #FFFAFF;
-}
-
-.flatTable  .controlTd{  
-  position:relative;
-  width:80px;
-  cursor:pointer;
-}
-
-.flatTable  .headingTr{
-    height:30px;
-    background: rgba(5, 14, 51, 1);
-    color:#FFFAFF; 
-    font-size:8pt;
-    border:0px solid;
-}  
-
-
-.button{
+.button-property,.button-gold,.button-fd,.button-ppf {
   text-align:center;
   cursor:pointer;
 }
@@ -79,7 +129,7 @@
     width:400px;
     height:100%; 
     background: #FFFAFF;  
-    overflow:hidden;  
+    overflow:hidden;      
     padding:0px;
     box-sizing:border-box;
     visibility: hidden;
@@ -88,11 +138,24 @@
 .sForm .close{
     float:right; 
     height:48px;
-    width:80px;
+    width: 80px;
     padding-top:16px;    
     box-sizing:border-box;
     background:rgba(5, 14, 51, 1);
     color:#FFFAFF;
+}
+
+#sForm-v-property .close{
+    width: 32px;
+}
+#sForm-v-ppf .close {
+    width: 32px;
+}
+#sForm-v-fd .close {
+    width: 32px;
+}
+#sForm-v-gold .close {
+    width: 32px;
 }
   
 .sForm .title{
@@ -150,33 +213,6 @@ tr:nth-child(3) .settingsIcon {
 
 .sFormPadding {
     padding: 1rem 1rem 1rem 1rem;
-}
-
-.add-income-table {
-    background: #FFFAFF;
-    color: rgba(5, 14, 51, 1);
-    border-radius: 5px;
-    padding: .5rem 1rem ; 
-
-}
-
-.add-income-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(5, 14, 51, 0.1);
-    padding: .5rem 0; 
-}
-
-.add-income-header .add-income-title {
-    font-size: 1.4rem;
-    color: rgba(5, 14, 51, 1); 
-}
-
-.add-income-body {
-    margin: 1.5rem 0;
-    font-size: 1.4rem;
-    overflow: auto; 
 }
 
 .form label {

@@ -212,12 +212,38 @@ tr:nth-child(3) .settingsIcon {
     background-color: #3a96ff;
 }
 
-[type="date"] {
-    background:#fff url(https://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/calendar_2.png)  97% 50% no-repeat ;
+input[type="date"], input[type="month"]{
+    position: relative;
 }
-[type="date"]::-webkit-inner-spin-button {
-    display: none;
+
+input[type="date"]:after,input[type="month"]:after {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900; 
+    content: "\f073";
+    color: #555;
+    padding: 0 5px;
 }
-[type="date"]::-webkit-calendar-picker-indicator {
-    opacity: 0;
+
+input[type="date"]:hover:after,input[type="month"]:hover:after {
+    color: #bf1400;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator,input[type="month"]::-webkit-calendar-picker-indicator  {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    height: auto;
+    color: transparent;
+    background: transparent;
+}
+
+input[type="date"]::-webkit-inner-spin-button,input[type="month"]::-webkit-inner-spin-button {
+    z-index: 1;
+}
+
+input[type="date"]::-webkit-clear-button, input[type="month"]::-webkit-clear-button {
+     z-index: 1;
 }

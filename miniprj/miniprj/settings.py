@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -115,6 +116,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+# USE_THOUSAND_SEPARATOR = True
 
 
 # Static files (CSS, JavaScript, Images)

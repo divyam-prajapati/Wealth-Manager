@@ -41,12 +41,10 @@
               <td class="controlTd"><i class="fas fa-cog"></i>
                 <div class="settingsIcons">
                     <span class="settingsIcon"><i class="fas fa-times"></i></span>
-                    <span class="button settingsIcon">
-                        <a href="{% url 'edit-object' e.id %}">
-                            <i class="fa fa-edit" style="color: white;"></i>
-                        </a>
-                    </span>
-                    <a href="{% url 'delete-object' e.id %}" class="settingsIcon">
+                    <a href="{% url 'edit-expense-object' e.id %}" class="button settingsIcon">
+                        <i class="fa fa-edit" style="color: white;"></i>
+                    </a>
+                    <a href="{% url 'delete-expense-object' e.id %}" class="settingsIcon">
                         <i class="fa fa-trash" style="color: red;"></i>
                     </a>
                 </div> 
@@ -56,7 +54,7 @@
           
         </table>
     </div>
-    <div id="sForm" class="sForm">
+    <div id="sForm" class="sForm {% if form_data %}open{% endif %}">
         <span class="button close"><i class="fas fa-times"></i></span>
         <h2 class="title">Add a New Expense</h2>  
 
@@ -64,7 +62,7 @@
         <div class="add-expense sFormPadding">        
             <div class="add-expense-body">
         
-                <form action="{% url 'expense' %}" class="form" method="post">
+                <form action="{% if form_data %}{% url 'edit-expense-object' form_data.id %}{% else %}{% url 'expense' %}{% endif %}" class="form" method="post">
                     {% csrf_token %}
                     <div class="group">
                         <label for="amount">Expense Amount</label>
@@ -73,7 +71,7 @@
                     </div>
                     <div class="group">
                         <label for="date">Select Date of Expense</label>
-                        <input class="form-control" id="date" name="date" type="date"
+                        <input class="form-control" id="date" name="date" type="date" 
                         {% if date %}value="{{ date }}"{% endif %}/>
                     </div>
                     <div class="group">
@@ -127,7 +125,6 @@
 {% endif %}
 
 {% endblock body %}
-<!--From 2 new var one for label and one for data and pass them in data -->
 <script>
     {% block jquery %}
 
@@ -143,19 +140,18 @@
         var color = ['#00429d', '#325da9', '#4e78b5', '#6694c1', '#80b1cc', '#9dced6', '#c0eade', 
                     '#ffdac4', '#ffb3a7', '#fb8a8c', '#eb6574', '#d5405e', '#b81b4a', '#93003a'];
         
-        var endpoint = "{% url 'api-chart-expense-data' %}"
+        var endpoint = "{% url 'api-chart-data' %}"
         $.ajax({
             method: "GET",
             url: endpoint,
             success: function(data) {
                 var ctx = document.getElementById('myChart1').getContext('2d');
-                //console.log(data.cdata);
                 
-                var labels = data.cdata.map(function(e) {
+                var labels = data.expensePieData.map(function(e) {
                     return e.expenseCategory;
                 });
                 
-                var data = data.cdata.map(function(e) {
+                var data = data.expensePieData.map(function(e) {
                     return e.expenseAmount__sum;
                 });
 
@@ -185,12 +181,12 @@
             success: function(data) {
                 var lineGraph = document.getElementById('myChartSecond').getContext('2d');
                 
-                var llabels = data.ldata.map(function(e) {
+                var llabels = data.expenseLineData.map(function(e) {
                     const month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
                     
                     return month[ parseInt(e.m) - 1];
                 });
-                var ldata = data.ldata.map(function(e) {
+                var ldata = data.expenseLineData.map(function(e) {
                     return e.expenseAmount__sum;
                 });
                 
@@ -219,95 +215,3 @@
 
     {% endblock jquery %}
 </script>
-<!--
-
-
-
-    <div class="container">
-    <div class="wrapper" url-endpoint='{% url "api-chart-expense-data" %}'>
-            
-        <canvas id="myChart" class="graph"></canvas
-        <canvas id="montly-expense" class="graph"></canvas>
-
-        
-
-        
-        <div class="add-expense">
-
-            <div class="add-expense-header">
-                <h4 class="add-expense-title">Add Expense</h4>
-            </div>
-        
-            <div class="add-expense-body">
-        
-                <form action="{% url 'expense' %}" class="form" method="post">
-                    {% csrf_token %}
-                    <div class="group">
-                        <label for="amount">Expense Amount</label>
-                        <input type="number" name="amount" placeholder="Enter your Expense Amount">
-                    </div>
-                    <div class="group">
-                        <label for="date">Select Date of Expense</label>
-                        <input class="form-control" id="date" name="date" placeholder="YYYY-MM-DD" type="text"/>
-                    </div>
-                    <div class="group">
-                        <label for="category">Select Expense Category</label>
-                        <select name="category">
-                            <option value="">Select</option>
-                            <option value="">Rent</option>
-                            <option value="">Transportation</option>
-                            <option value="">Groceries</option>
-                            <option value="">Home and utilities</option>
-                            <option value="">Bills & emis</option>
-                            <option value="">Insurance</option>
-                            <option value="">Education</option>
-                            <option value="">Health</option>
-                            <option value="">Personal care</option>
-                            <option value="">Shopping</option>
-                            <option value="">Travel</option>
-                            <option value="">Entertainment</option>
-                            <option value="">Food and Dining</option>
-                            <option value="">Memberships</option>
-                        </select>
-                    </div>
-                    <div class="group">
-                        <label for="description">Expense Description</label>
-                        <input type="text" name="description" placeholder="Enter Description">
-                    </div>
-                    <div class="group">
-                        <input type="submit" class="btn btn-blue" style="width: 40%;" value="Save">
-                    </div>
-                    
-                </form>
-            </div>
-                            
-        </div>
-        
-    </div>    
-
-    <div class="grid">
-        <div class="add-expense-table">
-            <div class="add-expense-header">
-                <h4 class="add-expense-title">Expenses Table</h4>
-            </div>
-            <div class="add-expense-body">
-                <table class="zebra">
-                    {% for e in expense %}
-                        <tr>
-                            <td>{{ e.expenseCategory }}</td>
-                            <td>{{ e.expenseAmount }}</td>
-                            <td>{{ e.expenseDate }}</td>
-                            <td>
-                                <a href="#" class="btn btn-dblue"><i class="fa fa-edit"></i></a>
-                                <a href="#" class="btn btn-red"><i class="fa fa-trash"></i></a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            </div>
-        </div>
-    </div>
-  
-</div>
-
--->
