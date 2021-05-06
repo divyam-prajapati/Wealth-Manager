@@ -9,7 +9,7 @@
 
 {% block body %}
 <div class="container">
-	<div class="box table">
+	<div class="table">
         <table class="flatTable">
             <tr class="titleTr">
               <td class="titleTd">EVENTS</td>
@@ -25,38 +25,45 @@
               <td></td>
               <td></td>
             </tr>
-
-            {% for e in events %}
-            <tr>
-              <td>{{ e.etitle }}</td>
-              <td>{{ e.edate }}</td>
-              <td>{{ e.eamount }}</td>
-              <td>{{ e.edescription }}</td>
-              <td class="control-td-view">
-                <a href="{% url 'view-eventExpense-object' e.id %}" class="ExpensebuttonView settingsIcon" style="color: rgba(5,14,51,1); background-color: #f6f3f7;">
-                    <i class="fa fa-eye"></i>
-                </a>
-              </td>
-              <td class="control-td-add">
-                <a href="#" class="Expensebutton settingsIcon" style="color: rgba(5,14,51,1); background-color: #f6f3f7; padding-left: 0px;">
-                    <i class="fa fa-plus"></i>
-                </a>
-              </td>
-              <td class="controlTd"><i class="fas fa-cog"></i>
-                <div class="settingsIcons">
-                    <span class="settingsIcon"><i class="fas fa-times"></i></span>
-                    <a href="{% url 'edit-event-object' e.id %}" class="button settingsIcon">
-                        <i class="fa fa-edit" style="color: white;"></i>
+            {% if events %}
+                {% for e in events %}
+                <tr>
+                <td>{{ e.etitle }}</td>
+                <td>{{ e.edate }}</td>
+                <td>{{ e.eamount }}</td>
+                <td>{{ e.edescription }}</td>
+                <td class="control-td-view">
+                    <a href="{% url 'view-eventExpense-object' e.id %}" class="ExpensebuttonView settingsIcon" style="color: rgba(5,14,51,1); background-color: transparent;">
+                        <i class="fa fa-eye"></i>
                     </a>
-                    <a href="{% url 'delete-event-object' e.id %}" class="settingsIcon">
-                        <i class="fa fa-trash" style="color: red;"></i>
+                </td>
+                <td class="control-td-add">
+                    <a href="#" class="Expensebutton settingsIcon" style="color: rgba(5,14,51,1); background-color: transparent; padding-left: 0px;">
+                        <i class="fa fa-plus"></i>
                     </a>
-                </div> 
-              </td>
-            {% endfor%}
+                </td>
+                <td class="controlTd"><i class="fas fa-cog"></i>
+                    <div class="settingsIcons">
+                        <span class="settingsIcon"><i class="fas fa-times"></i></span>
+                        <a href="{% url 'edit-event-object' e.id %}" class="button settingsIcon">
+                            <i class="fa fa-edit" style="color: white;"></i>
+                        </a>
+                        <a href="{% url 'delete-event-object' e.id %}" class="settingsIcon">
+                            <i class="fa fa-trash" style="color: red;"></i>
+                        </a>
+                    </div> 
+                </td>
+                {% endfor%}
+            {% else %}
+                <tr style="text-align: center;">
+                    <td rowspan="3" colspan="7">
+                        <img src="{% static 'media/empty-events-table.svg' %}">
+                    </td>
+                </tr>
+            {% endif %}
         </table>
     </div>
-    <div id="eventsExpense" class="box table {% if events_expense_list %}open-table{% endif %} {% if form_data %}open-table{% endif %}">
+    <div id="eventsExpense" class="table {% if events_expense_list %}open-table{% endif %}{% if form_data %}open-table{% endif %}">
         <table class="flatTable eventsExpense">
             <tr class="titleTr">
               <td class="titleTd">EXPENSES IN EVENT</td>
@@ -69,21 +76,22 @@
               <td></td>
             </tr>
             {% for e in events_expense_list %}
-            <tr>
-              <td>{{ e.etitle }}</td>
-              <td>{{ e.edate }}</td>
-              <td>{{ e.eamount }}</td>
-              <td class="controlTd"><i class="fas fa-cog"></i>
-                <div class="settingsIcons">
-                    <span class="settingsIcon"><i class="fas fa-times"></i></span>
-                    <a href="{% url 'edit-eventExpense-object' e.id %}" class="Expensebutton settingsIcon">
-                        <i class="fa fa-edit" style="color: white;"></i>
-                    </a>
-                    <a href="{% url 'delete-eventExpense-object' e.id %}" class="settingsIcon">
-                        <i class="fa fa-trash" style="color: red;"></i>
-                    </a>
-                </div> 
-              </td>
+                <tr>
+                    <td>{{ e.etitle }}</td>
+                    <td>{{ e.edate }}</td>
+                    <td>{{ e.eamount }}</td>
+                    <td class="controlTd"><i class="fas fa-cog"></i>
+                        <div class="settingsIcons">
+                            <span class="settingsIcon"><i class="fas fa-times"></i></span>
+                            <a href="{% url 'edit-eventExpense-object' e.id %}" class="Expensebutton settingsIcon">
+                                <i class="fa fa-edit" style="color: white;"></i>
+                            </a>
+                            <a href="{% url 'delete-eventExpense-object' e.id %}" class="settingsIcon">
+                                <i class="fa fa-trash" style="color: red;"></i>
+                            </a>
+                        </div> 
+                    </td>
+                </tr>
             {% endfor%}
         </table>
     </div>

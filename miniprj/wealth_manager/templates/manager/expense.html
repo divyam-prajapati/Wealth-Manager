@@ -10,14 +10,26 @@
 
 <div class="container">
     <div class="wrapper">
-        <div class="box graph">
-            <canvas id="myChart1" class="graph"></canvas>
+        <div class="box">
+            
+                {% if expense %}
+                    <canvas id="myChart1" class="graph"></canvas>
+                {% else %}
+                    <img src="{% static 'media/chart-empty.svg' %}" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);">
+                {% endif %}
+            
         </div>
-    	<div class="box graph">
-            <canvas id="myChartSecond" class="graph"></canvas>
+    	<div class="box">
+            
+            {% if expense %}
+                <canvas id="myChartSecond" class="graph"></canvas>
+            {% else %}
+                <img src="{% static 'media/chart-empty.svg' %}">
+            {% endif %}
+        
         </div>
     </div>
-	<div class="box table">
+	<div class="table">
         <table class="flatTable">
             <tr class="titleTr">
               <td class="titleTd">EXPENSES</td>
@@ -31,26 +43,38 @@
               <td>DESCRIPTION</td>
               <td></td>
             </tr>
-
-            {% for e in expense %}
-            <tr>
-              <td>{{ e.expenseCategory }}</td>
-              <td>{{ e.expenseDate }}</td>
-              <td>{{ e.expenseAmount }}</td>
-              <td>{{ e.expenseDescription }}</td>
-              <td class="controlTd"><i class="fas fa-cog"></i>
-                <div class="settingsIcons">
-                    <span class="settingsIcon"><i class="fas fa-times"></i></span>
-                    <a href="{% url 'edit-expense-object' e.id %}" class="button settingsIcon">
-                        <i class="fa fa-edit" style="color: white;"></i>
-                    </a>
-                    <a href="{% url 'delete-expense-object' e.id %}" class="settingsIcon">
-                        <i class="fa fa-trash" style="color: red;"></i>
-                    </a>
-                </div> 
-              </td>
-            </tr>
-            {% endfor%}
+            {% if expense %}
+                {% if user.is_authenticated %}
+                    {% for e in expense %}
+                        {% if e.user == user.get_username %}
+                            <tr>
+                            <td>{{ e.expenseCategory }}</td>
+                            <td>{{ e.expenseDate }}</td>
+                            <td>{{ e.expenseAmount }}</td>
+                            <td>{{ e.expenseDescription }}</td>
+                            <td class="controlTd"><i class="fas fa-cog"></i>
+                                <div class="settingsIcons">
+                                    <span class="settingsIcon"><i class="fas fa-times"></i></span>
+                                    <a href="{% url 'edit-expense-object' e.id %}" class="button settingsIcon">
+                                        <i class="fa fa-edit" style="color: white;"></i>
+                                    </a>
+                                    <a href="{% url 'delete-expense-object' e.id %}" class="settingsIcon">
+                                        <i class="fa fa-trash" style="color: red;"></i>
+                                    </a>
+                                </div> 
+                            </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor%}
+                {% endif %}
+            {% else %}
+                <tr style="text-align: center;">
+                    <td rowspan="3" colspan="5">
+                        <img src="{% static 'media/empty-expense-table.svg' %}">
+                    </td>
+                </tr>
+                
+            {% endif %}
           
         </table>
     </div>
@@ -102,6 +126,9 @@
                         <input type="text" name="description" placeholder="Enter Description"
                         value="{% if form_data %}{{ form_data.expenseDescription }}{% endif %}"/>
                     </div>
+                    {% if user.is_authenticated %}
+                        <input id="user" name="user" type="text" value="{{ user.get_username }}" style="visibility: hidden;"/>
+                    {% endif %}
                     <div class="group">
                         <input type="submit" class="btn btn-blue" style="width: 40%; border: none;" value="Save"/>
                     </div>
@@ -125,6 +152,7 @@
 {% endif %}
 
 {% endblock body %}
+{% if user.is_authenticated %}
 <script>
     {% block jquery %}
 
@@ -137,8 +165,8 @@
             $(this).children(".settingsIcon").toggleClass("openIcon"); 
         });
 
-        var color = ['#00429d', '#325da9', '#4e78b5', '#6694c1', '#80b1cc', '#9dced6', '#c0eade', 
-                    '#ffdac4', '#ffb3a7', '#fb8a8c', '#eb6574', '#d5405e', '#b81b4a', '#93003a'];
+        var color = ['#6200EA', '#B388FF', '#2196F382B1FF', '#8C9EFF', '#536DFE', '#1A237E', '#7E57C2', 
+                    '#D1C4E9', '#673AB7', '#3F51B5', '#82B1FF', '#0D47A1', '#1565C0', '#651FFF'];
         
         var endpoint = "{% url 'api-chart-data' %}"
         $.ajax({
@@ -147,14 +175,17 @@
             success: function(data) {
                 var ctx = document.getElementById('myChart1').getContext('2d');
                 
-                var labels = data.expensePieData.map(function(e) {
-                    return e.expenseCategory;
-                });
-                
-                var data = data.expensePieData.map(function(e) {
-                    return e.expenseAmount__sum;
-                });
-
+                    var labels = data.expensePieData.map(function(e) {
+                        if ( e.user === "{{ user.get_username }}" )
+                            return e.expenseCategory;
+                    });
+                    
+                    var data = data.expensePieData.map(function(e) {
+                        if ( e.user === "{{ user.get_username }}" )
+                            return e.expenseAmount__sum;
+                    });
+                console.log(labels);
+                console.log(data);
                 const config = {
                     type: 'doughnut',
                     data: {
@@ -163,9 +194,23 @@
                             label: 'My First Dataset',
                             data: data,
                             backgroundColor: color,
-                            hoverOffset: 4
+                            hoverOffset: 4,
+                            borderColor: "rgba(5,14,51,0.1)",   
                         }]
                     },
+                    options: {
+                        legend: {
+                            labels: {
+                                fontColor: "rgba(5,14,51,1)",
+                                fontSize: 12,
+                            }
+                        },
+                        scales: {
+                            ticks: {
+                                fontColor: "rgba(5,14,51,1)", // this here
+                            },
+                        }   
+                    }
                 };
                 var myChart = new Chart(ctx, config)
             },
@@ -180,29 +225,51 @@
             url: endpoint,
             success: function(data) {
                 var lineGraph = document.getElementById('myChartSecond').getContext('2d');
-                
+
                 var llabels = data.expenseLineData.map(function(e) {
                     const month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-                    
-                    return month[ parseInt(e.m) - 1];
+                    if ( e.user === "{{ user.get_username }}" )
+                        return month[ parseInt(e.m) - 1];
                 });
                 var ldata = data.expenseLineData.map(function(e) {
-                    return e.expenseAmount__sum;
+                    if ( e.user === "{{ user.get_username }}" )
+                        return e.expenseAmount__sum;
                 });
-                
+                console.log(llabels);
+                console.log(ldata);
                 const lineData = {
                     labels: llabels,
                     datasets: [{
                         label: 'Expense',
                         data: ldata,
                         fill: false,
-                        borderColor: 'rgb(75, 192, 192)',
+                        borderColor: '#311B92',
                         tension: 0.1
                     }]
                 };
                 const lineConfig = {
                     type: 'line',
                     data: lineData,
+                    options: {
+                        legend: {
+                                labels: {
+                                    fontColor: "rgba(5,14,51,1)",
+                                    fontSize: 12,
+                                }
+                        },
+                        scales: {
+                            xAxes: [{ 
+                                ticks: {
+                                    fontColor: "rgba(5,14,51,1)", // this here
+                                },
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    fontColor: "rgba(5,14,51,1)", // this here
+                                },
+                            }],
+                        }   
+                    }
                 };
                 
                 var lineChart = new Chart(lineGraph, lineConfig)
@@ -215,3 +282,4 @@
 
     {% endblock jquery %}
 </script>
+{% endif %}

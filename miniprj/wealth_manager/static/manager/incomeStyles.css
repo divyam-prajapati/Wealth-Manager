@@ -1,8 +1,10 @@
 .box {
     box-sizing: border-box;
-    background-color: #FFFAFF;
+    background-color: rgba(236, 240, 241,0.7);
     margin: 0 1.5rem 1.5rem 0;
     border-radius: 5px;
+    text-align: center;
+    width: 50%;
 }
 
 .container {
@@ -13,10 +15,11 @@
     flex-direction: column;
 }
 
-.graph {
+.wrapper .box img{
     width: 50%;
+    margin: 1rem 0 1rem 0;
 }
-    
+
 .wrapper {
     display: flex;
     flex: 1;
@@ -33,7 +36,7 @@
 
 .flatTable tr {
     height: 50px;
-    background: #f6f3f7;
+    background: rgba(236, 240, 241,0.7);
     border-bottom: rgba(0,0,0,.05) 1px solid;
 }
 
@@ -44,8 +47,10 @@
 
 .flatTable .titleTr{
   height:48px;  
-  color:#FFFAFF; 
-  background: rgba(5, 14, 51, 1);  
+  /* color:#FFFAFF; 
+  background: rgba(5, 14, 51, 1);   */
+  background-color: rgba(213, 0, 0, 0.7); 
+  color: #FFFAFF;
   border:0px solid;
 }
 
@@ -61,8 +66,10 @@
 
 .flatTable  .headingTr{
     height:30px;
-    background: rgba(5, 14, 51, 1);
-    color:#FFFAFF; 
+    /* background: rgba(5, 14, 51, 1);
+    color:#FFFAFF;  */
+    background-color: rgba(213, 0, 0, 0.7); 
+    color: #FFFAFF;
     font-size:8pt;
     border:0px solid;
 }  
@@ -91,8 +98,9 @@
     width:80px;
     padding-top:16px;    
     box-sizing:border-box;
-    background:rgba(5, 14, 51, 1);
-    color:#FFFAFF;
+    /* background:rgba(5, 14, 51, 1);
+    color:#FFFAFF; */
+    color: #FFFAFF;
 }
   
 .sForm .title{
@@ -101,7 +109,9 @@
     padding-top:20px;
     padding-left:20px;
     box-sizing:border-box;
-    background:rgba(5, 14, 51, 1);
+    /* background:rgba(5, 14, 51, 1);
+    color: #FFFAFF; */
+    background-color: rgba(213, 0, 0, 0.7); 
     color: #FFFAFF;
 }
 
@@ -125,7 +135,9 @@
 
 .settingsIcon{
   float:right; 
-  background: rgba(5, 14, 51, 1);
+  /* background: rgba(5, 14, 51, 1);
+  color: #FFFAFF; */
+  background-color: rgba(213, 0, 0, 1); 
   color: #FFFAFF;
   height:50px;
   width:80px;
@@ -151,34 +163,6 @@ tr:nth-child(3) .settingsIcon {
 .sFormPadding {
     padding: 1rem 1rem 1rem 1rem;
 }
-
-.add-income-table {
-    background: #FFFAFF;
-    color: rgba(5, 14, 51, 1);
-    border-radius: 5px;
-    padding: .5rem 1rem ; 
-
-}
-
-.add-income-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(5, 14, 51, 0.1);
-    padding: .5rem 0; 
-}
-
-.add-income-header .add-income-title {
-    font-size: 1.4rem;
-    color: rgba(5, 14, 51, 1); 
-}
-
-.add-income-body {
-    margin: 1.5rem 0;
-    font-size: 1.4rem;
-    overflow: auto; 
-}
-
 .form label {
     font-size: 1.4rem;
     font-weight: 400;
@@ -203,12 +187,12 @@ tr:nth-child(3) .settingsIcon {
 }
 
 .btn-blue {
-    background-color: #6DB1FF;
+    background-color: rgba(213, 0, 0, 0.7);
     color: #fffaff; 
     border:none;
 }
 .btn-blue:hover {
-    background-color: #3a96ff;
+    background-color: rgba(213, 0, 0, 1);
 }
 
 input[type="date"], input[type="month"]{

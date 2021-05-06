@@ -31,8 +31,11 @@ urlpatterns = [
     path('Events/Expense/<int:object_id>/', views.delete_eventsExpense, name="delete-eventExpense-object"),
     path('Events/Expense/edit/<int:object_id>/', views.edit_eventsExpense, name="edit-eventExpense-object"),
     path("Profile/", views.profile, name="profile"),
+    path("Profile/ExpenseReport", views.exportExpense, name="profile-expense"),
+    path("Profile/IncomeReport", views.exportIncome, name="profile-income"),
     path("Login/", views.login_view, name="login"),
     path("Logout/", views.logout_view, name="logout"),
+    # path("Forgot/", views.forgot, name="forgot"),
     path("Signup/", views.signup, name="signup"),
     path('api/chart/data/', ChartData.as_view(), name="api-chart-data"),
 ]

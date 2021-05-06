@@ -1,9 +1,10 @@
 .box {
     box-sizing: border-box;
-    background-color: #FFFAFF;
+    background-color: rgba(236, 240, 241,0.7);
     margin: 0 1.5rem 1.5rem 0;
     border-radius: 5px;
     width: 50%;
+    text-align: center;
 }
 
 .container {
@@ -12,6 +13,11 @@
     justify-content: center;
     flex: 1;
     flex-direction: column;
+}
+
+.wrapper img{
+    width: 50%;
+    margin: 1rem 0 1rem 0;
 }
 
 .wrapper {

@@ -47,13 +47,21 @@ body {
 	border-radius: 10px;
 }
 
-.login-box h4 {
+.login-box .ca{
   font-weight: 200;
   font-size: 1.6rem;
 	margin-top: 2rem ;
 	padding: 0;
 	color: #FFFAFF;
 	text-align: start;
+}
+
+.login-box .fp{
+  font-weight: 200;
+  font-size: 1.6rem;
+	padding: 0;
+	color: #FFFAFF;
+	text-align: end;
 }
 
 .login-box h4 a {

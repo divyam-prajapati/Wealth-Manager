@@ -10,14 +10,22 @@
 {% block body %}
 <div class="container">
     <div class="wrapper">
-        <div class="box graph">
-            <canvas id="myChart1" class="graph"></canvas>
+        <div class="box">
+            {% if income %}
+                <canvas id="myChart1" class="graph"></canvas>
+            {% else %}
+                <img src="{% static 'media/chart-empty.svg' %}" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);">
+            {% endif %}
         </div>
-    	<div class="box graph">
-            <canvas id="myChartSecond" class="graph"></canvas>
+    	<div class="box">
+            {% if income %}
+                <canvas id="myChartSecond" class="graph"></canvas>
+            {% else %}
+                <img src="{% static 'media/chart-empty.svg' %}">
+            {% endif %}
         </div>
     </div>
-	<div class="box table">
+	<div class="table">
         <table class="flatTable">
             <tr class="titleTr">
               <td class="titleTd">INCOMES</td>
@@ -31,26 +39,37 @@
               <td>DESCRIPTION</td>
               <td></td>
             </tr>
-
-            {% for i in income %}
-            <tr>
-              <td>{{ i.incomeCategory }}</td>
-              <td>{{ i.incomeDate }}</td>
-              <td>{{ i.incomeAmount }}</td>
-              <td>{{ i.incomeDescription }}</td>
-              <td class="controlTd"><i class="fas fa-cog"></i>
-                <div class="settingsIcons">
-                    <span class="settingsIcon"><i class="fas fa-times"></i></span>
-                    <a href="{% url 'edit-income-object' i.id %}"  class="button settingsIcon">
-                        <i class="fa fa-edit" style="color: white;"></i>
-                    </a>
-                    <a href="{% url 'delete-income-object' i.id %}" class="settingsIcon">
-                        <i class="fa fa-trash" style="color: red;"></i>
-                    </a>
-                </div> 
-              </td>
-            </tr>
-            {% endfor%}
+            {% if income %}
+                {% if user.is_authenticated %}
+                    {% for i in income %}
+                        {% if i.user == user.get_username %}
+                            <tr>
+                                <td>{{ i.incomeCategory }}</td>
+                                <td>{{ i.incomeDate }}</td>
+                                <td>{{ i.incomeAmount }}</td>
+                                <td>{{ i.incomeDescription }}</td>
+                                <td class="controlTd"><i class="fas fa-cog"></i>
+                                    <div class="settingsIcons">
+                                        <span class="settingsIcon"><i class="fas fa-times"></i></span>
+                                        <a href="{% url 'edit-income-object' i.id %}"  class="button settingsIcon">
+                                            <i class="fa fa-edit" style="color: white;"></i>
+                                        </a>
+                                        <a href="{% url 'delete-income-object' i.id %}" class="settingsIcon">
+                                            <i class="fa fa-trash" style="color: red;"></i>
+                                        </a>
+                                    </div> 
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor%}
+                {% endif %}
+            {% else %}
+                <tr style="text-align: center;">
+                    <td rowspan="3" colspan="5">
+                        <img src="{% static 'media/empty-income-table.svg' %}">
+                    </td>
+                </tr>
+            {% endif %}
           
         </table>
     </div>
@@ -97,6 +116,9 @@
                         <input type="text" name="description" placeholder="Enter Description"
                         value="{% if form_data %}{{ form_data.incomeDescription }}{% endif %}"/>
                     </div>
+                    {% if user.is_authenticated %}
+                        <input id="user" name="user" type="text" value="{{ user.get_username }}" style="visibility: hidden;"/>
+                    {% endif %}
                     <div class="group">
                         <input type="submit" class="btn btn-blue" style="width: 40%; border: none;" value="Save"/>
                     </div>
@@ -120,7 +142,7 @@
 {% endif %}
 
 {% endblock body %}
-
+{% if user.is_authenticated %}
 <script>
     {% block jquery %}
 
@@ -133,8 +155,8 @@
             $(this).children(".settingsIcon").toggleClass("openIcon"); 
         });
 
-        var color = ['#93003a', '#b81b4a', '#d5405e', '#eb6574', '#fb8a8c', '#ffb3a7', 
-                    '#ffdac4', '#c0eade', '#9dced6', '#80b1cc','#6694c1', '#4e78b5','#325da9' , '#00429d'];
+        var color = ['#C62828', '#FF1744', '#FF8A80', '#FF5252', '#B71C1C', '#D32F2F', 
+                    '#F44336', '#E57373', '#F50057', '#F50057','#FFCDD2', '#C62828','#F8BBD0' , '#E53935'];
         
         var endpoint = "{% url 'api-chart-data' %}"
         $.ajax({
@@ -144,11 +166,13 @@
                 var ctx = document.getElementById('myChart1').getContext('2d');
                 
                 var labels = data.incomePieData.map(function(e) {
-                    return e.incomeCategory;
+                    if ( e.user === "{{ user.get_username }}" )
+                        return e.incomeCategory;
                 });
                 
                 var data = data.incomePieData.map(function(e) {
-                    return e.incomeAmount__sum;
+                    if ( e.user === "{{ user.get_username }}" )
+                        return e.incomeAmount__sum;
                 });
 
                 const config = {
@@ -159,9 +183,23 @@
                             label: 'My First Dataset',
                             data: data,
                             backgroundColor: color,
-                            hoverOffset: 4
+                            hoverOffset: 4,
+                            borderColor: "rgba(5,14,51,0.1)",   
                         }]
                     },
+                    options: {
+                        legend: {
+                            labels: {
+                                fontColor: "rgba(5,14,51,1)",
+                                fontSize: 12,
+                            }
+                        },
+                        scales: {
+                            ticks: {
+                                fontColor: "rgba(5,14,51,1)", // this here
+                            },
+                        }   
+                    }
                 };
                 var myChart = new Chart(ctx, config)
             },
@@ -179,11 +217,12 @@
                 
                 var llabels = data.incomeLineData.map(function(e) {
                     const month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-                    
-                    return month[ parseInt(e.m) - 1];
+                    if ( e.user === "{{ user.get_username }}" )
+                        return month[ parseInt(e.m) - 1];
                 });
                 var ldata = data.incomeLineData.map(function(e) {
-                    return e.incomeAmount__sum;
+                    if ( e.user === "{{ user.get_username }}" )
+                        return e.incomeAmount__sum;
                 });
                 
                 const lineData = {
@@ -192,13 +231,33 @@
                         label: 'Income',
                         data: ldata,
                         fill: false,
-                        borderColor: '#9c3d54',//'rgb(75, 192, 192)'
+                        borderColor: '#D50000',
                         tension: 0.1
                     }]
                 };
                 const lineConfig = {
                     type: 'line',
                     data: lineData,
+                    options: {
+                        legend: {
+                                labels: {
+                                    fontColor: "rgba(5,14,51,1)",
+                                    fontSize: 12,
+                                }
+                        },
+                        scales: {
+                            xAxes: [{ 
+                                ticks: {
+                                    fontColor: "rgba(5,14,51,1)", // this here
+                                },
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    fontColor: "rgba(5,14,51,1)", // this here
+                                },
+                            }],
+                          }   
+                    }
                 };
                 
                 var lineChart = new Chart(lineGraph, lineConfig)
@@ -211,3 +270,4 @@
 
     {% endblock jquery %}
 </script>
+{% endif %}

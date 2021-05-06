@@ -7,16 +7,27 @@
 {% endblock head %}
 
 {% block body %}
-
+{% if user.is_authenticated %}
 <div class="container">
     <div class="grid">
-        <div class="mini-reports bg-blue">
+        <div class="mini-reports" style="background-color: rgba(142, 68, 173, 0.9); color: #FFFAFF;">
                 <div class="l">
                     <div class="i">
                         <i class="fas fa-rupee-sign c-blue"></i> 
-                        {% for k in p %}
-                        <span>{{k.bamt__sum}}</span>
-                        {% endfor %}
+                        {% if p %}
+                            {% for k in p %}
+                                
+                                    {% if k.user == user.get_username  %}
+                                    <span>{{k.bamt__sum}}</span>
+                                    {% endif %}
+                                    {% if k.bamt__sum == null %}
+                                    <span>0</span>
+                                    {% endif %}
+                                
+                            {% endfor %}
+                        {% else %}
+                            <span>0</span>
+                        {% endif %}
                     </div>
                     <span>Property</span>
                 </div>
@@ -29,15 +40,26 @@
                     </div>
                 </div>
         </div>
-        <div class="mini-reports bg-blue">
+        <div class="mini-reports" style="background-color: rgba(241, 196, 15, 0.9); color: #FFFAFF">
                 <div class="l">
                     <div class="i">
                         <i class="fas fa-rupee-sign c-blue"></i> 
-                        {% for k in m %}
-                        <span>{{k.bamt__sum}}</span>
-                        {% endfor %}
+                        {% if m %}
+                            {% for k in m %}
+                                
+                                    {% if k.user == user.get_username  %}
+                                    <span>{{k.bamt__sum}}</span>
+                                    {% endif %}
+                                    {% if k.bamt__sum == null %}
+                                    <span>0</span>
+                                    {% endif %}
+                                
+                            {% endfor %}
+                        {% else %}
+                            <span>0</span>
+                        {% endif %}
                     </div>
-                    <span>Gold</span>
+                    <span>Jewel</span>
                 </div>
                 <div class="b">
                     <div class="r button-v-gold">
@@ -48,13 +70,24 @@
                     </div>
                 </div>
         </div>
-        <div class="mini-reports bg-blue">
+        <div class="mini-reports" style="background-color: rgba(211, 84, 0, 0.9); color: #FFFAFF">
                 <div class="l">
                     <div class="i">
                         <i class="fas fa-rupee-sign c-blue"></i> 
-                        {% for k in f %}
-                        <span>{{k.samt__sum}}</span>
-                        {% endfor %}
+                        {% if f %}
+                            {% for k in f %}
+                                
+                                    {% if k.user == user.get_username  %}
+                                    <span>{{k.samt__sum}}</span>
+                                    {% endif %}
+                                    {% if k.samt__sum == null %}
+                                    <span>0</span>
+                                    {% endif %}
+                                
+                            {% endfor %}
+                        {% else %}
+                            <span>0</span>
+                        {% endif %}
                     </div>
                     <span>FD</span>
                 </div>
@@ -67,13 +100,24 @@
                     </div>
                 </div>
         </div>
-        <div class="mini-reports bg-blue">
+        <div class="mini-reports" style="background-color: rgba(39, 174, 96, 0.9); color: #FFFAFF;">
             <div class="l">
                 <div class="i">
                     <i class="fas fa-rupee-sign c-blue"></i> 
-                    {% for k in pp %}
-                        <span>{{k.samt__sum}}</span>
-                    {% endfor %}
+                        {% if pp %}
+                            {% for k in pp %}
+                                
+                                    {% if k.user == user.get_username  %}
+                                    <span>{{k.samt__sum}}</span>
+                                    {% endif %}
+                                    {% if k.samt__sum == null %}
+                                    <span>0</span>
+                                    {% endif %}
+                                
+                            {% endfor %}
+                        {% else %}
+                            <span>0</span>
+                        {% endif %}
                 </div>
                 <span>PPF</span>
             </div>
@@ -90,81 +134,107 @@
 
     <div class="graph-wrapper">
         <div class="wrapper">
-            <div class="box graph">
-                <canvas id="pbar" class="graph"></canvas>
+            <div class="box">
+                {% if property %}
+                    <canvas id="pbar" class="graph"></canvas>
+                {% else %}
+                    <img src="{% static 'media/chart-empty.svg' %}" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);">
+                {% endif %}
             </div>
             <div class="box graph">
-                <canvas id="mbar" class="graph"></canvas>
+                {% if gold %}
+                    <canvas id="mbar" class="graph"></canvas>
+                {% else %}
+                    <img src="{% static 'media/chart-empty.svg' %}">
+                {% endif %}
             </div>
         </div>
         <div class="wrapper">
-            <div class="box graph">
-                <canvas id="myChartFd" class="graph"></canvas>
+            <div class="box">
+                {% if fd %}
+                    <canvas id="myChartFd" class="graph"></canvas>
+                {% else %}
+                    <img src="{% static 'media/chart-empty.svg' %}" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);">
+                {% endif %}
             </div>
-            <div class="box graph">
-                <canvas id="myChartPPF" class="graph"></canvas>
+            <div class="box">
+                {% if ppf %}
+                    <canvas id="myChartPPF" class="graph"></canvas>
+                {% else %}
+                    <img src="{% static 'media/chart-empty.svg' %}">
+                {% endif %}
             </div>
         </div>
     </div>
 
     <div id="sForm-v-property" class="sForm">
         <span class="button-v-property close"><i class="fas fa-times"></i></span>
-        <h2 class="title">Property</h2>  
+        <h2 class="title" style="background-color: rgba(142, 68, 173, 1);">Property</h2>  
 
 
         <div class="assets sFormPadding">        
             <div class="assets-body">
-
-                {% for p in property %}
-                    <div class="mini-reports bg-blue" style="margin-top: 1rem;">
-                        <div class="l">
-                            <div class="i">
-                                <i class="fas fa-rupee-sign c-blue"></i> 
-                                <span>{{ p.bamt }}</span>
+                {% if property %}
+                    {% for p in property %}
+                        <div class="mini-reports bg-p" style="margin-top: 1rem;">
+                            <div class="l">
+                                <div class="i">
+                                    <i class="fas fa-rupee-sign c-blue"></i> 
+                                    <span>{{ p.bamt }}</span>
+                                </div>
+                                <span>{{ p.des }}</span>
                             </div>
-                            <span>{{ p.des }}</span>
+                            <div class="b">
+                                <a href="{% url 'assets-edit-p' p.id%}" class="button-property r">
+                                    <i class="fas fa-pen c-blue"></i>
+                                </a>
+                                <a href="{% url 'assets-delete-p' p.id%}" class="r">
+                                    <i class="fas fa-trash c-blue"></i>
+                                </a>
+                            </div>
                         </div>
-                        <div class="b">
-                            <a href="{% url 'assets-edit-p' p.id%}" class="button-property r">
-                                <i class="fas fa-pen c-blue"></i>
-                            </a>
-                            <a href="{% url 'assets-delete-p' p.id%}" class="r">
-                                <i class="fas fa-trash c-blue"></i>
-                            </a>
-                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div style="text-align: center; margin-top: 3rem;">
+                        <img src="{% static 'media/empty-p-table.svg' %}">
                     </div>
-                {% endfor %}
-                
+                {% endif %}
             </div>
         </div>
     </div>
 
     <div id="sForm-v-gold" class="sForm">
         <span class="button-v-gold close"><i class="fas fa-times"></i></span>
-        <h2 class="title">Gold</h2>  
+        <h2 class="title" style="background-color: rgba(241, 196, 15, 1);">Gold</h2>  
 
 
         <div class="assets sFormPadding">        
             <div class="assets-body">
-                {% for g in gold %}
-                <div class="mini-reports bg-blue" style="margin-top: 1rem;">
-                    <div class="l">
-                        <div class="i">
-                            <i class="fas fa-rupee-sign c-blue"></i> 
-                            <span>{{ g.bamt }}</span>
+                {% if gold %}
+                    {% for g in gold %}
+                    <div class="mini-reports bg-m" style="margin-top: 1rem;">
+                        <div class="l">
+                            <div class="i">
+                                <i class="fas fa-rupee-sign c-blue"></i> 
+                                <span>{{ g.bamt }}</span>
+                            </div>
+                            <span>{{ g.des }}</span>
                         </div>
-                        <span>{{ g.des }}</span>
+                        <div class="b">
+                            <a href="{% url 'assets-edit-m' g.id %}" class="button-gold r">
+                                <i class="fas fa-pen c-blue"></i>
+                            </a>
+                            <a href="{% url 'assets-delete-m' g.id%}" class="r">
+                                <i class="fas fa-trash c-blue"></i>
+                            </a>
+                        </div>
                     </div>
-                    <div class="b">
-                        <a href="{% url 'assets-edit-m' g.id %}" class="button-gold r">
-                            <i class="fas fa-pen c-blue"></i>
-                        </a>
-                        <a href="{% url 'assets-delete-m' g.id%}" class="r">
-                            <i class="fas fa-trash c-blue"></i>
-                        </a>
+                    {% endfor %}
+                {% else %}
+                    <div style="text-align: center; margin-top: 3rem;">
+                        <img src="{% static 'media/empty-m-table.svg' %}">
                     </div>
-                </div>
-                {% endfor %}
+                {% endif %}
                 
             </div>
         </div>
@@ -172,30 +242,36 @@
 
     <div id="sForm-v-fd" class="sForm">
         <span class="button-v-fd close"><i class="fas fa-times"></i></span>
-        <h2 class="title">FD</h2>  
+        <h2 class="title" style="background-color: rgba(211, 84, 0, 1);">FD</h2>  
 
 
         <div class="assets sFormPadding">        
             <div class="assets-body">
-                {% for f in fd %}
-                    <div class="mini-reports bg-blue" style="margin-top: 1rem;">
-                        <div class="l">
-                            <div class="i">
-                                <i class="fas fa-rupee-sign c-blue"></i> 
-                                <span>{{ f.samt }}</span>
+                {% if fd %}
+                    {% for f in fd %}
+                        <div class="mini-reports bg-fd" style="margin-top: 1rem;">
+                            <div class="l">
+                                <div class="i">
+                                    <i class="fas fa-rupee-sign c-blue"></i> 
+                                    <span>{{ f.samt }}</span>
+                                </div>
+                                <span>{{f.des}}</span>
                             </div>
-                            <span>{{f.des}}</span>
+                            <div class="b">
+                                <a href="{% url 'assets-edit-f' f.id %}" class="button-fd r">
+                                    <i class="fas fa-pen c-blue"></i>
+                                </a>
+                                <a href="{% url 'assets-delete-f' f.id%}" class="r">
+                                    <i class="fas fa-trash c-blue"></i>
+                                </a>
+                            </div>
                         </div>
-                        <div class="b">
-                            <a href="{% url 'assets-edit-f' f.id %}" class="button-fd r">
-                                <i class="fas fa-pen c-blue"></i>
-                            </a>
-                            <a href="{% url 'assets-delete-f' f.id%}" class="r">
-                                <i class="fas fa-trash c-blue"></i>
-                            </a>
-                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div style="text-align: center; margin-top: 3rem;">
+                        <img src="{% static 'media/empty-f-table.svg' %}">
                     </div>
-                {% endfor %}
+                {% endif %}
                 
             </div>
         </div>
@@ -203,37 +279,43 @@
 
     <div id="sForm-v-ppf" class="sForm">
         <span class="button-v-ppf close"><i class="fas fa-times"></i></span>
-        <h2 class="title">PPF</h2>  
+        <h2 class="title" style="background-color: rgba(39, 174, 96, 1);">PPF</h2>  
 
 
         <div class="assets sFormPadding">        
             <div class="assets-body">
-                {% for p in ppf %}
-                    <div class="mini-reports bg-blue" style="margin-top: 1rem;">
-                        <div class="l">
-                            <div class="i">
-                                <i class="fas fa-rupee-sign c-blue"></i> 
-                                <span>{{p.samt}}</span>
+                {% if ppf %}
+                    {% for p in ppf %}
+                        <div class="mini-reports bg-pp" style="margin-top: 1rem;">
+                            <div class="l">
+                                <div class="i">
+                                    <i class="fas fa-rupee-sign c-blue"></i> 
+                                    <span>{{p.samt}}</span>
+                                </div>
+                                <span>{{p.des}}</span>
                             </div>
-                            <span>{{p.des}}</span>
+                            <div class="b">
+                                <a href="{% url 'assets-edit-pp' p.id %}" class="button-ppf r">
+                                    <i class="fas fa-pen c-blue"></i>
+                                </a>
+                                <a href="{% url 'assets-delete-pp' p.id%}" class="r">
+                                    <i class="fas fa-trash c-blue"></i>
+                                </a>
+                            </div>
                         </div>
-                        <div class="b">
-                            <a href="{% url 'assets-edit-pp' p.id %}" class="button-ppf r">
-                                <i class="fas fa-pen c-blue"></i>
-                            </a>
-                            <a href="{% url 'assets-delete-pp' p.id%}" class="r">
-                                <i class="fas fa-trash c-blue"></i>
-                            </a>
-                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div style="text-align: center; margin-top: 3rem;">
+                        <img src="{% static 'media/empty-pp-table.svg' %}">
                     </div>
-                {% endfor %}
+                {% endif %}
             </div>
         </div>
     </div>
 	
     <div id="sForm-property" class="sForm {% if form_data_p %}open{% endif %}">
         <span class="button-property close"><i class="fas fa-times"></i></span>
-        <h2 class="title">Add a New Property</h2>  
+        <h2 class="title" style="background-color: rgba(142, 68, 173,1);">Add a New Property</h2>  
 
 
         <div class="assets sFormPadding">        
@@ -268,8 +350,9 @@
                             value="{% if form_data_p %}{{ form_data_p.cpsqft }}{% endif %}"/>
                         </div>
                     {% endif %}
+                    <input id="user" name="user" type="text" value="{{ user.get_username }}" style="visibility: hidden;"/>
                     <div class="group">
-                        <input type="submit" class="btn btn-blue" style="width: 40%; border: none;" value="Save"/>
+                        <input type="submit" class="btn btn-p" style="width: 40%; border: none;" value="Save"/>
                     </div>
                     
                 </form>
@@ -278,7 +361,7 @@
     </div>
     <div id="sForm-gold" class="sForm {% if form_data_m %}open{% endif %}">
         <span class="button-gold close"><i class="fas fa-times"></i></span>
-        <h2 class="title">Add Gold</h2>  
+        <h2 class="title" style="background-color: rgba(241, 196, 15, 1);">Add Gold</h2>  
 
 
         <div class="assets sFormPadding">        
@@ -325,8 +408,9 @@
                             value="{% if form_data_m %}{{ form_data_m.cpm }}{% endif %}"/>
                         </div>
                     {% endif %}
+                    <input id="user" name="user" type="text" value="{{ user.get_username }}" style="visibility: hidden;"/>
                     <div class="group">
-                        <input type="submit" class="btn btn-blue" style="width: 40%; border: none;" value="Save"/>
+                        <input type="submit" class="btn btn-m" style="width: 40%; border: none;" value="Save"/>
                     </div>
                     
                 </form>
@@ -335,7 +419,7 @@
     </div>
     <div id="sForm-fd" class="sForm {% if form_data_f %}open{% endif %}">
         <span class="button-fd close"><i class="fas fa-times"></i></span>
-        <h2 class="title">Add a New FD</h2>  
+        <h2 class="title" style="background-color: rgba(211, 84, 0, 1);">Add a New FD</h2>  
 
 
         <div class="assets sFormPadding">        
@@ -363,8 +447,9 @@
                         <input type="text" name="description" placeholder="Enter Description"
                         value="{% if form_data_f %}{{ form_data_f.des }}{% endif %}"/>
                     </div>
+                    <input id="user" name="user" type="text" value="{{ user.get_username }}" style="visibility: hidden;"/>
                     <div class="group">
-                        <input type="submit" class="btn btn-blue" style="width: 40%; border: none;" value="Save"/>
+                        <input type="submit" class="btn btn-fd" style="width: 40%; border: none;" value="Save"/>
                     </div>
                     
                 </form>
@@ -373,7 +458,7 @@
     </div>
     <div id="sForm-ppf" class="sForm {% if form_data_pp %}open{% endif %}">
         <span class="button-ppf close"><i class="fas fa-times"></i></span>
-        <h2 class="title">Add a New PPF</h2>  
+        <h2 class="title" style="background-color: rgba(39, 174, 96, 1);">Add a New PPF</h2>  
 
 
         <div class="assets sFormPadding">        
@@ -401,8 +486,9 @@
                         <input type="text" name="description" placeholder="Enter Description"
                         value="{% if form_data_pp %}{{ form_data_pp.des }}{% endif %}"/>
                     </div>
+                    <input id="user" name="user" type="text" value="{{ user.get_username }}" style="visibility: hidden;"/>
                     <div class="group">
-                        <input type="submit" class="btn btn-blue" style="width: 40%; border: none;" value="Save"/>
+                        <input type="submit" class="btn btn-pp" style="width: 40%; border: none;" value="Save"/>
                     </div>
                     
                 </form>
@@ -422,9 +508,9 @@
         <div class="alert alert-danger">{{ message }}</div>
     {% endif %}
 {% endif %}
-
+{% endif %}
 {% endblock body %}
-
+{% if user.is_authenticated %}
 <script>
     {% block jquery %}
         $(".button-property").click(function () {
@@ -457,26 +543,6 @@
             $(this).children(".settingsIcon").toggleClass("openIcon"); 
         });
 
-        var color = [
-                        'rgba(255, 99, 132, 0.2)',
-                        ,
-                        'rgba(255, 205, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(201, 203, 207, 0.2)'
-                        ];
-
-        var borColor = [
-                        'rgb(255, 99, 132)',
-                        'rgb(255, 159, 64)',
-                        'rgb(255, 205, 86)',
-                        ,
-                        'rgb(54, 162, 235)',
-                        'rgb(153, 102, 255)',
-                        'rgb(201, 203, 207)'
-                        ];
-        
         var endpoint = "{% url 'api-chart-data' %}"
 
         
@@ -505,13 +571,12 @@
                     datasets: [{
                         label: 'Property old Price',
                         data: bdata,
-                        borderColor: 'rgb(255, 99, 132)',
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        backgroundColor: '#6c5ce7',
                     },{
                         label: 'Property new Price',
                         data: b2data,
-                        borderColor: 'rgb(75, 192, 192)',
-                        backgroundColor: 'rgb(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(155, 89, 182,1.0)',
+                        backgroundColor: '#8e44ad',
                     }]
                 };
                 const config = {
@@ -519,10 +584,22 @@
                     data: pdata,
                     options: {
                         barValueSpacing: 20,
+                        legend: {
+                            labels: {
+                                fontColor: "rgba(5,14,51,1)",
+                                fontSize: 12,
+                            }
+                        },
                         scales: {
+                            xAxes: [{ 
+                                ticks: {
+                                    fontColor: "rgba(5,14,51,1)", // this here
+                                },
+                            }],
                             yAxes: [{
                                 ticks: {
                                     min: 0,
+                                    fontColor: "rgba(5,14,51,1)",
                                 }
                             }]
                         }
@@ -551,13 +628,11 @@
                     datasets: [{
                         label: 'Jewl old Price',
                         data: mdata,
-                        borderColor: 'rgb(255, 99, 132)',
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        backgroundColor: '#fdcb6e',
                     },{
                         label: 'Jewl new Price',
                         data: m2data,
-                        borderColor: 'rgb(75, 192, 192)',
-                        backgroundColor: 'rgb(75, 192, 192, 0.2)',
+                        backgroundColor: '#f1c40f',
                     }]
                 };
                 const configM = {
@@ -565,10 +640,22 @@
                     data: dataM,
                     options: {
                         barValueSpacing: 20,
+                        legend: {
+                            labels: {
+                                fontColor: "rgba(5,14,51,1)",
+                                fontSize: 12,
+                            }
+                        },
                         scales: {
+                            xAxes: [{ 
+                                ticks: {
+                                    fontColor: "rgba(5,14,51,1)", // this here
+                                },
+                            }],
                             yAxes: [{
                                 ticks: {
                                     min: 0,
+                                    fontColor: "rgba(5,14,51,1)",
                                 }
                             }]
                         }
@@ -595,13 +682,11 @@
                     datasets: [{
                         label: 'Staring FD value',
                         data: fddata,
-                        borderColor: 'rgb(255, 99, 132)',
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        backgroundColor: '#e17055',
                     },{
                         label: 'Current FD value',
                         data: fd2data,
-                        borderColor: 'rgb(75, 192, 192)',
-                        backgroundColor: 'rgb(75, 192, 192, 0.2)',
+                        backgroundColor: '#d35400',
                     }]
                 };
                 const configfd = {
@@ -609,10 +694,22 @@
                     data: fdata,
                     options: {
                         barValueSpacing: 20,
+                        legend: {
+                            labels: {
+                                fontColor: "rgba(5,14,51,1)",
+                                fontSize: 12,
+                            }
+                        },
                         scales: {
+                            xAxes: [{ 
+                                ticks: {
+                                    fontColor: "rgba(5,14,51,1)", // this here
+                                },
+                            }],
                             yAxes: [{
                                 ticks: {
                                     min: 0,
+                                    fontColor: "rgba(5,14,51,1)",
                                 }
                             }]
                         }
@@ -639,13 +736,11 @@
                     datasets: [{
                         label: 'Staring PPF value',
                         data: ppdata,
-                        borderColor: 'rgb(255, 99, 132)',
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        backgroundColor: '#55efc4',
                     },{
                         label: 'Current PPF value',
                         data: pp2data,
-                        borderColor: 'rgb(75, 192, 192)',
-                        backgroundColor: 'rgb(75, 192, 192, 0.2)',
+                        backgroundColor: '#27ae60',
                     }]
                 };
                 const configppf = {
@@ -653,10 +748,22 @@
                     data: ppfdata,
                     options: {
                         barValueSpacing: 20,
+                        legend: {
+                            labels: {
+                                fontColor: "rgba(5,14,51,1)",
+                                fontSize: 12,
+                            }
+                        },
                         scales: {
+                            xAxes: [{ 
+                                ticks: {
+                                    fontColor: "rgba(5,14,51,1)", // this here
+                                },
+                            }],
                             yAxes: [{
                                 ticks: {
                                     min: 0,
+                                    fontColor: "rgba(5,14,51,1)",
                                 }
                             }]
                         }
@@ -673,3 +780,4 @@
 
     {% endblock jquery %}
 </script>
+{% endif %}
