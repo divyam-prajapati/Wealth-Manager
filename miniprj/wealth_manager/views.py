@@ -20,6 +20,10 @@ def index(request):
     return render(request, "manager/dashboard.html",{
         "e": Expense.objects.values('user').annotate(Sum('expenseAmount')),
         "i": Income.objects.values('user').annotate(Sum('incomeAmount')),
+        'a': [property.objects.values('user').annotate(Sum('bamt')),
+            gold.objects.values('user').annotate(Sum('bamt')),
+            fd.objects.values('user').annotate(Sum('samt')),
+            ppf.objects.values('user').annotate(Sum('samt')),],
     })
 
 def login_view(request):

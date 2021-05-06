@@ -65,7 +65,7 @@
                 {% endif %}
         </div>
         <div class="box">
-            {% if e %}
+            {% if a %}
                 <canvas id="myChartPie" class="graph"></canvas>
             {% else %}
                 <img src="{% static 'media/chart-empty.svg' %}">
@@ -84,6 +84,7 @@
 {% endif %}
 {% endif %}
 {% endblock body %}
+
 {% if user.is_authenticated %}
 <script>
     {% block jquery %}
@@ -187,16 +188,20 @@
                 ]
                 pdata = [];
                 data.p.map(function(e) {
-                    pdata.push(e.bamt__sum);
+                    if ( e.user === "{{ user.get_username }}" ) 
+                        pdata.push(e.bamt__sum);
                 });
                 data.m.map(function(e) {
-                    pdata.push(e.bamt__sum);
+                    if ( e.user === "{{ user.get_username }}" ) 
+                        pdata.push(e.bamt__sum);
                 });
                 data.f.map(function(e) {
-                    pdata.push(e.samt__sum);
+                    if ( e.user === "{{ user.get_username }}" )
+                        pdata.push(e.samt__sum);
                 });
                 data.pp.map(function(e) {
-                    pdata.push(e.samt__sum);
+                    if ( e.user === "{{ user.get_username }}" )
+                        pdata.push(e.samt__sum);
                 });
                 const config = {
                     type: 'doughnut',

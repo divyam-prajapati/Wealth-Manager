@@ -26,7 +26,9 @@
               <td></td>
             </tr>
             {% if events %}
+            {% if user.is_authenticated %}
                 {% for e in events %}
+                {% if e.user == user.get_username %}
                 <tr>
                 <td>{{ e.etitle }}</td>
                 <td>{{ e.edate }}</td>
@@ -53,7 +55,9 @@
                         </a>
                     </div> 
                 </td>
+                {% endif %}
                 {% endfor%}
+            {% endif %}
             {% else %}
                 <tr style="text-align: center;">
                     <td rowspan="3" colspan="7">
@@ -75,7 +79,9 @@
               <td>AMOUNT</td>
               <td></td>
             </tr>
+            {% if user.is_authenticated %}
             {% for e in events_expense_list %}
+            {% if e.user == user.get_username %}
                 <tr>
                     <td>{{ e.etitle }}</td>
                     <td>{{ e.edate }}</td>
@@ -92,7 +98,9 @@
                         </div> 
                     </td>
                 </tr>
+            {% endif %}
             {% endfor%}
+            {% endif %}
         </table>
     </div>
 
@@ -126,6 +134,9 @@
                         <input type="text" name="description" placeholder="Enter Description"
                         value="{% if form_data %}{{ form_data.edescription }}{% endif %}"/>
                     </div>
+                    {% if user.is_authenticated %}
+                        <input id="user" name="user" type="text" value="{{ user.get_username }}" style="visibility: hidden;"/>
+                    {% endif %}
                     <div class="group">
                         <input type="submit" class="btn btn-blue" style="width: 40%; border: none;" value="Save"/>
                     </div>
@@ -176,6 +187,9 @@
                         <input class="form-control" id="date" name="date" type="date" 
                         {% if edate %}value="{{ edate }}"{% endif %}/>
                     </div>
+                    {% if user.is_authenticated %}
+                        <input id="user" name="user" type="text" value="{{ user.get_username }}" style="visibility: hidden;"/>
+                    {% endif %}
                     <div class="group">
                         <input type="submit" class="btn btn-blue" style="width: 40%; border: none;" value="Save"/>
                     </div>

@@ -154,7 +154,7 @@
                 {% if fd %}
                     <canvas id="myChartFd" class="graph"></canvas>
                 {% else %}
-                    <img src="{% static 'media/chart-empty.svg' %}" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);">
+                    <img src="{% static 'media/chart-empty.svg' %}" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);">              
                 {% endif %}
             </div>
             <div class="box">
@@ -538,11 +538,6 @@
             $("#sForm-ppf").toggleClass("open");   
         });
 
-        $(".controlTd").click(function () {
-            $(this).children(".settingsIcons").toggleClass("display"); 
-            $(this).children(".settingsIcon").toggleClass("openIcon"); 
-        });
-
         var endpoint = "{% url 'api-chart-data' %}"
 
         
@@ -554,14 +549,17 @@
                 var barGraph = document.getElementById('pbar').getContext('2d');
 
                 var blabels = data.property.map(function(e) {
-                    return e.des;
+                    if ( e.user === "{{ user.get_username }}" )
+                        return e.des;
                 });
                 var bdata = data.property.map(function(e) {
-                    return e.bamt;
+                    if ( e.user === "{{ user.get_username }}" )    
+                        return e.bamt;
                 });
                 var b2data = data.property.map(function(e) {
                     if (e.cpsqft != null) {
-                        return e.sqft * e.cpsqft;
+                        if ( e.user === "{{ user.get_username }}" )    
+                            return e.sqft * e.cpsqft;
                     } else {
                         return 0;
                     }
@@ -611,14 +609,17 @@
                 var mBarGraph = document.getElementById('mbar').getContext('2d');
 
                 var mlabels = data.gold.map(function(e) {
-                    return e.des;
+                    if ( e.user === "{{ user.get_username }}" )
+                        return e.des;
                 });
                 var mdata = data.gold.map(function(e) {
-                    return e.bamt;
+                    if ( e.user === "{{ user.get_username }}" )
+                        return e.bamt;
                 });
                 var m2data = data.gold.map(function(e) {
                     if (e.cpm != null) {
-                        return e.cpm * e.gms;
+                        if ( e.user === "{{ user.get_username }}" )
+                            return e.cpm * e.gms;
                     } else {
                         return 0;
                     }
@@ -665,17 +666,23 @@
                 //Gold Chart end
                 //FD chart
                 var barGraphFD = document.getElementById('myChartFd').getContext('2d');
+            
+
                 var fd2data = data.fdd.date.map(function(e) {
-                    return (data.fdd.today - parseInt(e.m));
+                    if ( e.user === "{{ user.get_username }}" )
+                        return (data.fdd.today - parseInt(e.m));
                 });
                 var fdlabels = data.fd.map(function(e) {
-                    return e.des;
+                    if ( e.user === "{{ user.get_username }}" )
+                        return e.des;
                 });
                 var fddata = data.fd.map(function(e) {
-                    for (let i =0;i<fd2data.length;i++) {
-                        fd2data[i] = e.samt + fd2data[i] + (e.samt * e.int)/100;
+                    if ( e.user === "{{ user.get_username }}" ) {
+                        for (let i =0;i<fd2data.length;i++) {
+                            fd2data[i] = e.samt + fd2data[i] + (e.samt * e.int)/100;
+                        }
+                        return e.samt;
                     }
-                    return e.samt;
                 });
                 const fdata = {
                     labels: [fdlabels],
@@ -720,16 +727,20 @@
                 //PPF Chart
                 var barGraphPPF = document.getElementById('myChartPPF').getContext('2d');
                 var pp2data = data.fdd.date.map(function(e) {
-                    return (data.ppd.today - parseInt(e.m));
+                    if ( e.user === "{{ user.get_username }}" )
+                        return (data.ppd.today - parseInt(e.m));
                 });
                 var pplabels = data.ppf.map(function(e) {
-                    return e.des;
+                    if ( e.user === "{{ user.get_username }}" )
+                        return e.des;
                 });
                 var ppdata = data.ppf.map(function(e) {
-                    for (let i =0;i<fd2data.length;i++) {
-                        pp2data[i] = e.samt + pp2data[i] + (e.samt * e.int)/100;
+                    if ( e.user === "{{ user.get_username }}" ) {
+                        for (let i =0;i<fd2data.length;i++) {
+                            pp2data[i] = e.samt + pp2data[i] + (e.samt * e.int)/100;
+                        }
+                        return e.samt;
                     }
-                    return e.samt;
                 });
                 const ppfdata = {
                     labels: [pplabels],
