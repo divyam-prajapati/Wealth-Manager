@@ -138,6 +138,7 @@
                 {% if property %}
                     <canvas id="pbar" class="graph"></canvas>
                 {% else %}
+                    <canvas id="pbar" class="graph" style="visibility: hidden;"></canvas>
                     <img src="{% static 'media/chart-empty.svg' %}" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);">
                 {% endif %}
             </div>
@@ -145,6 +146,7 @@
                 {% if gold %}
                     <canvas id="mbar" class="graph"></canvas>
                 {% else %}
+                    <canvas id="mbar" class="graph" style="visibility: hidden;"></canvas>
                     <img src="{% static 'media/chart-empty.svg' %}">
                 {% endif %}
             </div>
@@ -154,6 +156,7 @@
                 {% if fd %}
                     <canvas id="myChartFd" class="graph"></canvas>
                 {% else %}
+                    <canvas id="myChartFd" class="graph" style="visibility: hidden;"></canvas>
                     <img src="{% static 'media/chart-empty.svg' %}" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);">              
                 {% endif %}
             </div>
@@ -161,6 +164,7 @@
                 {% if ppf %}
                     <canvas id="myChartPPF" class="graph"></canvas>
                 {% else %}
+                    <canvas id="myChartPPF" class="graph" style="visibility: hidden;"></canvas>
                     <img src="{% static 'media/chart-empty.svg' %}">
                 {% endif %}
             </div>
