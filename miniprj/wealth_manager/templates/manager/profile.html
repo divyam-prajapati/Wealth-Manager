@@ -15,28 +15,19 @@
         {% if user.is_authenticated %}
         <div>
             <h2>Hello, {{ user.get_short_name }}</h2>
-            <form action="{% url 'profile' %}" method="POST">
-                {% csrf_token %}
                 <div class="user-box">
-                    <input type="text" name="username" required="" value="{{ user.get_username }}">
-                    <label for="username">Username</label>
+                    <label for="username">Username:</label>
+                    <p>{{ user.get_username }}</p>
                 </div>
                 <div class="user-box">
-                    <input type="text" name="name" required="" value="{{ user.get_full_name }}">
-                    <label for="name">Name</label>
+                    <label for="name">Name:</label>
+                    <p>{{ user.get_full_name }}</p>
                 </div>
                 <div class="user-box">
-                    <input type="email" name="email" required="" value="{{ user.email }}">
-                    <label for="email">Email</label>
+                    <label for="email">Email:</label>
+                    <p>{{ user.email }}</p>
                 </div>
-                <button type="submit">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                    Save
-                </button>
-            </form>
+
         </div>
         {% endif %}
     </div>

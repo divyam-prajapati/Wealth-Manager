@@ -49,168 +49,18 @@ body {
 
 .container  .profile-box .user-box {
 	position: relative;
+  display: flex;
+  flex-direction: row;
+  background: transparent;
 }
 
-.container .profile-box .user-box h3 {
+.container .profile-box .user-box label, p {
 	width: 100%;
-	padding: 10px 0;
+  padding: 1rem 0 0 0;
 	font-size: 16px;
 	color: #FFFAFF;
 	margin-bottom: 16px;
-	background: transparent;
-}
 
-.container  .profile-box .user-box input {
-	width: 100%;
-	padding: 10px 0;
-	font-size: 16px;
-	color: #FFFAFF;
-	margin-bottom: 30px;
-	border: none;
-	border-bottom: 1px solid #FFFAFF;
-	outline: none;
-	background: transparent;
-}
-
-.container  .profile-box .user-box label {
-	position: absolute;
-	top: 0;
-	left: 0;
-	padding: 10px 0;
-	font-size: 16px;
-	color: #FFFAFF;
-	pointer-events: none;
-	transition: .5s;
-}
-
-.profile-box .user-box input:focus ~ label, .profile-box .user-box input:valid ~ label {
-	top: -20px; 
-	left: 0px; 
-	color: #FFFAFF;
-	font-size: 12px;
-}
-
-
-.profile-box form button {
-	position: relative;
-	display: inline-block;
-	padding: 10px 20px;
-	color: #F16165;
-	font-size: 16px;
-	text-decoration: none;
-	text-transform: uppercase;
-	overflow: hidden;
-	transition: .5s;
-	margin-top: 40px;
-	letter-spacing: 4px;
-  background: transparent;
-  border: none;
-}
-
-.profile-box form button:hover {
-	background: #F16165;
-	color: #F1EEE6;
-	border-radius: 5px;
-	box-shadow: 0 0 5px #F16165,
-              0 0 25px #F16165,
-              0 0 50px #F16165,
-              0 0 100px #F16165;
-}
-
-.profile-box form button span {
-	position: absolute;
-	display: block;
-}
-
-.profile-box form button span:nth-child(1) {
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #F16165);
-  animation: btn-anim1 1s linear infinite;
-}
-
-@keyframes btn-anim1 {
-  0% {
-    left: -100%;
-  }
-  50%,100% {
-    left: 100%;
-  }
-}
-
-.profile-box span:nth-child(2) {
-	top: -100%;
-	right: 0;
-	width: 2px;
-	height: 100%;
-	background: linear-gradient(180deg, transparent, #F16165);
-	animation: btn-anim2 1s linear infinite;
-	animation-delay: .25s;
-}
-
-@keyframes btn-anim2 {
-	0%{
-		top: -100%;
-	}
-	50%,100% {
-		top: 100%;
-	}
-}
-
-.profile-box span:nth-child(3){
-	bottom: 0;
-	width: 100%;
-	height: 2px;
-	background: linear-gradient(270deg, transparent, #F16165);
-	animation: btn-anim3 1s linear infinite;
-	animation-delay: .5s;
-}
-
-@keyframes btn-anim3 {
-	0%{
-		right: -100%;
-	}
-	50%,100% {
-		right: 100%;
-	}
-}
-
-.profile-box span:nth-child(4) {
-	bottom: -100%;
-	left: 0;
-	width: 2px;
-	height: 100%;
-	background: linear-gradient(360deg, transparent, #F16165);
-	animation: btn-anim4 1s linear infinite;
-}
-
-@keyframes btn-anim4 {
-  0% {
-    bottom: -100%;
-  }
-  50%,100% {
-    bottom: 100%;
-  }
-}
-@keyframes myAnimation{
-    0%{
-      opacity: 1;
-    }
-    25%{
-        opacity: 0.9;  
-    }
-    50%{
-      opacity: 0.75;
-    }
-    75%{
-        opacity: 0.5;
-    }
-    100%{
-      display: none;
-      opacity: 0;
-    }
 }
 
 .alert {

@@ -17,7 +17,7 @@
                         {% if i %}
                             {% for k in i %}
                                 <span>
-                                    {% if k.user == user.get_username  %}
+                                    {% if k.user == user.get_username %}
                                         {{k.incomeAmount__sum}}
                                     {% endif %}
                                 </span>
@@ -58,7 +58,7 @@
 
     <div class="wrapper">
         <div class="box">
-                {% if e and i %}
+                {% if e or i %}
                     <canvas id="myChartLine" class="graph"></canvas>
                 {% else %}
                     <img src="{% static 'media/chart-empty.svg' %}" style="-webkit-transform: scaleX(-1); transform: scaleX(-1);">
@@ -180,28 +180,31 @@
             url: endpoint,
             success: function(data) {
                 var ctx = document.getElementById('myChartPie').getContext('2d');
-                labels = [
-                    "Property",
-                    "Gold",
-                    "FD",
-                    "PPF"
-                ]
+                labels = [];
                 pdata = [];
                 data.p.map(function(e) {
-                    if ( e.user === "{{ user.get_username }}" ) 
+                    if ( e.user === "{{ user.get_username }}" ) {
                         pdata.push(e.bamt__sum);
+                        labels.push("Property");
+                    }                   
                 });
                 data.m.map(function(e) {
-                    if ( e.user === "{{ user.get_username }}" ) 
+                    if ( e.user === "{{ user.get_username }}" ) {
                         pdata.push(e.bamt__sum);
+                        labels.push("Gold");
+                    }
                 });
                 data.f.map(function(e) {
-                    if ( e.user === "{{ user.get_username }}" )
+                    if ( e.user === "{{ user.get_username }}" ) {
                         pdata.push(e.samt__sum);
+                        labels.push("FD");
+                    }
                 });
                 data.pp.map(function(e) {
-                    if ( e.user === "{{ user.get_username }}" )
+                    if ( e.user === "{{ user.get_username }}" )  {
                         pdata.push(e.samt__sum);
+                        labels.push("PPF");
+                    }
                 });
                 const config = {
                     type: 'doughnut',

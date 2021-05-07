@@ -771,14 +771,16 @@ class ChartData(APIView):
 
 def exportExpense(request):
     expense_resource = ExpenseResource()
-    dataset = expense_resource.export()
+    queryset = Expense.objects.filter(user = request.user.username)
+    dataset = expense_resource.export(queryset)
     response = HttpResponse(dataset.xls, content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = 'attachment; filename="Expenses.xls"'
     return response
 
 def exportIncome(request):
     income_resource = IncomeResource()
-    dataset = income_resource.export()
+    queryset = Expense.objects.filter(user = request.user.username)
+    dataset = income_resource.export(queryset)
     response = HttpResponse(dataset.xls, content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = 'attachment; filename="Income.xls"'
     return response
